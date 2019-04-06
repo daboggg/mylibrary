@@ -3,14 +3,10 @@
     <!--START-->
     <th:block th:insert="~{parts/page_template :: start}"/>
 
-    <!--NAVBAR-->
-    <th:block th:insert="parts/navbar"/>
+    <!--LOGIN-->
+    <th:block th:insert="~{parts/login::login(false)}"/>
 
-    <div class="container mt-5">
-        <h3>Hello, user!</h3>
-    </div>
     <!--END-->
     <th:block th:insert="~{parts/page_template :: end}"/>
+
 </th:block>
-
-

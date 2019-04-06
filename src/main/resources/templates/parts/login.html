@@ -1,0 +1,37 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="login(isLoginPage)" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <!--NAVBAR-->
+    <th:block th:insert="parts/navbar"/>
+
+    <hr class="my-4 mt-5">
+    <div class="container">
+        <form th:action="${isLoginPage}?'/login':'/registration'" method="post" class="col-8">
+            <div class="form-group row">
+                <label for="inputUsername" class="col-sm-2 col-form-label">Username</label>
+                <div class="col-sm-10">
+                    <input type="text" name="username" class="form-control" id="inputUsername" placeholder="input username">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" name="password" class="form-control" id="inputPassword" placeholder="input password">
+                </div>
+            </div>
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button th:text="${not isLoginPage}?'Create':'Sign in'" type="submit" class="btn btn-primary"></button>
+                </div>
+            </div>
+
+                <a th:if="${isLoginPage}" class="mt-2" href="/registration">Add new user</a>
+
+
+        </form>
+    </div>
+    <hr class="my-4">
+
+</div>

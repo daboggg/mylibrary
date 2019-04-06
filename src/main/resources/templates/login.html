@@ -1,0 +1,38 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+
+    <!--START-->
+    <th:block th:insert="~{parts/page_template :: start}"/>
+
+    <!--LOGIN-->
+    <th:block th:insert="~{parts/login::login(true)}"/>
+
+    <!--END-->
+    <th:block th:insert="~{parts/page_template :: end}"/>
+
+</th:block>
+
+
+
+
+
+
+
+
+
+<!--
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<form action="/login" method="post">
+    <div><label> User Name : <input type="text" name="username"/></label></div>
+    <div><label> Password : <input type="password" name="password"/></label></div>
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+    <div><input type="submit" value="Sign In"/> </div>
+</form>
+<a href="/registration">Registration</a>
+</body>
+</html>-->
