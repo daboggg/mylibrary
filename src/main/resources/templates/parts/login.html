@@ -4,6 +4,14 @@
     <th:block th:insert="parts/navbar"/>
 
     <hr class="my-4 mt-5">
+
+    <div th:if="${message}">
+        <div th:text="${message}" class="alert alert-danger" role="alert">
+            Это светлое уведомление
+        </div>
+        <hr class="my-4 mt-3">
+    </div>
+
     <div class="container">
         <form th:action="${isLoginPage}?'/login':'/registration'" method="post" class="col-8">
             <div class="form-group row">

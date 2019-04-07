@@ -51,7 +51,7 @@ public class MainController {
     ) {
         bookService.addBook(bookname, author,user);
         model.addAttribute("books", bookRepo.findAll());
-        return "main";
+        return "redirect:/main";
     }
 
 }
