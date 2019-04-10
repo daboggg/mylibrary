@@ -6,12 +6,16 @@
             <li class="nav-item active">
                 <a class="nav-link" href="/main">Main</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/user" >ListUser</a>
-            </li>
+
+            <!--если юзер имеет роль ADMIN, добавить в навбал ссылку ListUser-->
+            <th:block th:each="item:${#authentication.authorities}">
+                    <li th:if="${#strings.contains(item,'ADMIN')}" class="nav-item">
+                        <a class="nav-link" href="/user" >ListUser</a>
+                    </li>
+            </th:block>
+
 
         </ul>
-
 
         <span sec:authorize="isAuthenticated()" sec:authentication="name" class="navbar-text mr-3" ></span>
         <span sec:authorize="!isAuthenticated()" class="navbar-text mr-3">Please, login</span>

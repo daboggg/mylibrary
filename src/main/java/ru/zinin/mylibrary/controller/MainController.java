@@ -7,12 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import ru.zinin.mylibrary.domain.Book;
-import ru.zinin.mylibrary.domain.Role;
 import ru.zinin.mylibrary.domain.User;
 import ru.zinin.mylibrary.repos.BookRepo;
 import ru.zinin.mylibrary.service.BookService;
+import ru.zinin.mylibrary.service.FileService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -47,9 +49,10 @@ public class MainController {
             @AuthenticationPrincipal User user,
             @RequestParam String bookname,
             @RequestParam String author,
+            @RequestParam("file") MultipartFile file,
             Model model
-    ) {
-        bookService.addBook(bookname, author,user);
+    ) throws IOException {
+        bookService.addBook(bookname, author,user,file);
         model.addAttribute("books", bookRepo.findAll());
         return "redirect:/main";
     }

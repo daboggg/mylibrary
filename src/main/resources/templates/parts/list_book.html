@@ -7,17 +7,24 @@
             <th:block th:each="book:${books}">
                 <div class="col-7 col-sm-6 col-md-4 col-xl-3">
                     <div class="card my-1">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
+                        <!--<img class="card-img-top" th:src="@{'/file/'+${book.filename}}">-->
+                        <!--<div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the
                                 bulk
                                 of the card's content.</p>
-                        </div>
+                        </div>-->
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item" th:text="${book.bookname}">Cras justo odio</li>
                             <li class="list-group-item" th:text="${book.author}">Dapibus ac facilisis in</li>
                             <li class="list-group-item" th:text="${book.reliser.username}">Vestibulum at eros</li>
+                            <!--<li><a th:href="@{'/file/'+${book.filename}}"><img th:src="@{'/file/'+${book.filename}}"></a> </li>-->
+                            <!--<li><div th:text="${testService.test(book.filename)}"></div> </li>-->
+                            <!--<li><img th:src="@{'data:image/jpeg;base64,'+${fileService.extractPicture(book.filename)}}"></li>-->
+                            <!--<th:block th:if="${#strings.endsWith(book.filename,'.fb2')}">
+                                <li><img th:src="@{'data:image/jpeg;base64,'+${fileService.extractPicture(book.filename)}}"></li>
+                            </th:block>-->
+
                         </ul>
                         <div class="card-body">
                             <a href="#" class="card-link">Card link</a>
