@@ -6,29 +6,45 @@
         <div class="row justify-content-around">
             <th:block th:each="book:${books}">
                 <div class="col-7 col-sm-6 col-md-4 col-xl-3">
-                    <div class="card my-1">
-                        <!--<img class="card-img-top" th:src="@{'/file/'+${book.filename}}">-->
-                        <!--<div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the
-                                bulk
-                                of the card's content.</p>
-                        </div>-->
+                    <div class="card my-2">
+                        <img th:if="${book.pictureName}" class="card-img-top" th:src="@{'/file/'+${book.pictureName}}">
+                        <img th:unless="${book.pictureName}" class="card-img-top" th:src="@{'/book.jpg'}">
+
+                        <p>
+                            <button class="btn btn-secondary btn-block py-0" type="button" data-toggle="collapse" th:data-target="'#a'+${book.id}" aria-expanded="false" th:aria-controls="'a'+${book.id}">
+                                Аннотация
+                            </button>
+                        </p>
+                        <div class="collapse" th:id="'a'+${book.id}">
+                            <div class="card card-body py-1">
+                                <span class="h6" th:text="${book.annotation}">
+
+                                    scasca welfwe fwef oweieif oweiuf oweifu oweifu oweifu
+                                </span>
+                            </div>
+                        </div>
+
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item" th:text="${book.bookname}">Cras justo odio</li>
-                            <li class="list-group-item" th:text="${book.author}">Dapibus ac facilisis in</li>
-                            <li class="list-group-item" th:text="${book.reliser.username}">Vestibulum at eros</li>
-                            <!--<li><a th:href="@{'/file/'+${book.filename}}"><img th:src="@{'/file/'+${book.filename}}"></a> </li>-->
-                            <!--<li><div th:text="${testService.test(book.filename)}"></div> </li>-->
-                            <!--<li><img th:src="@{'data:image/jpeg;base64,'+${fileService.extractPicture(book.filename)}}"></li>-->
-                            <!--<th:block th:if="${#strings.endsWith(book.filename,'.fb2')}">
-                                <li><img th:src="@{'data:image/jpeg;base64,'+${fileService.extractPicture(book.filename)}}"></li>
-                            </th:block>-->
+                            <li class="list-group-item py-0">
+                                <strong>название:</strong><br><span th:text="${book.bookname}"></span>
+                            </li>
+                            <li class="list-group-item py-0">
+                                <strong>автор:</strong><br><span th:text="${book.author}"></span>
+                            </li>
+                            <li class="list-group-item py-0">
+                                <strong>загрузил: </strong><br><a th:href="@{'/user-books/'+${book.reliser.id}}"><span th:text="${book.reliser.username}"></span></a>
+                            </li>
 
                         </ul>
-                        <div class="card-body">
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
+
+                        <!--<th:block th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal.getUsername()}"></th:block>-->
+                        <!--<th:block th:text="${#authentication.principal.active}"></th:block>-->
+
+
+                        <div class="card-body py-0">
+                            <a th:if="${#authentication.principal.isAdmin()}" th:href="@{'/file/'+${book.filename}}" class="card-link">Download</a>
+
+                            <a th:if="${#authentication.principal.id==book.reliser.id}" th:href="@{'/user-books/'+${book.reliser.id}+'?book='+${book.id}}" class="card-link">Edit book</a>
                         </div>
                     </div>
                 </div>

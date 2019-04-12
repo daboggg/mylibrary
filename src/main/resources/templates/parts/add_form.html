@@ -1,16 +1,16 @@
 <div class="mx-5" th:fragment="add_form" xmlns:th="http://www.thymeleaf.org">
 
-    <form action="/add" method="post" enctype="multipart/form-data">
+    <form  method="post" enctype="multipart/form-data">
         <div class="form-group row">
             <label for="inputBookname" class="col-sm-2 col-form-label">Bookname</label>
             <div class="col-sm-10">
-                <input type="text" name="bookname" class="form-control" id="inputBookname" placeholder="input book name">
+                <input th:value="${book}?${book.bookname}:_" type="text" name="bookname" class="form-control" id="inputBookname" placeholder="input book name">
             </div>
         </div>
         <div class="form-group row">
             <label for="inputAuthor" class="col-sm-2 col-form-label">Author</label>
             <div class="col-sm-10">
-                <input type="text" name="author" class="form-control" id="inputAuthor" placeholder="author">
+                <input th:value="${book}?${book.author}:_" type="text" name="author" class="form-control" id="inputAuthor" placeholder="author">
             </div>
         </div>
 
@@ -19,6 +19,11 @@
             <input type="file" class="form-control-file" id="exampleFormControlFile1" name="file">
         </div>
 
+        <div class="form-group row">
+            <label for="picture">Choose a picture</label>
+            <input type="file" class="form-control-file" id="picture" name="picture">
+        </div>
+        <input type="hidden" name="id" th:value="${book}?${book.id}:_">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}">
         <div class="form-group row">
             <div class="col-sm-10">

@@ -4,9 +4,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import sun.security.krb5.internal.ccache.Credentials;
 
+import javax.management.remote.JMXPrincipal;
 import javax.persistence.*;
+import javax.security.auth.kerberos.KerberosPrincipal;
+import java.security.Principal;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -24,6 +29,13 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role",joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "reliser",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private Set<Book> books;
+
+    public boolean isAdmin() {
+        return roles.contains(Role.ADMIN);
+    }
 
     public Long getId() {
         return id;
@@ -88,6 +100,27 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
 

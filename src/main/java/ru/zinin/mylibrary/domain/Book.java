@@ -13,6 +13,12 @@ public class Book {
 
     private String filename;
 
+    @Column(name = "pic_name")
+    private String pictureName;
+
+    @Transient
+    private String annotation="No annotations";
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -65,5 +71,21 @@ public class Book {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getPictureName() {
+        return pictureName;
+    }
+
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
+    }
+
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
     }
 }

@@ -12,7 +12,6 @@ import ru.zinin.mylibrary.repos.BookRepo;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,22 +27,66 @@ public class BookService {
     @Autowired
     private FileService fileService;
 
-    public void addBook(String bookname,
-                        String author,
-                        User user,
-                        MultipartFile file
+    public void addBookFile(String bookname,
+                            String author,
+                            User user,
+                            MultipartFile file,
+                            MultipartFile picture,
+                            Long bookId
     ) throws IOException {
-        Book book = new Book();
-        book.setBookname(bookname);
-        book.setReliser(user);
-        book.setAuthor(author);
+        Book book;
+        if (bookId!=null){
+            book = bookRepo.findBookById(bookId);
 
-        if (file != null&&!file.isEmpty()) {
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
+            //свойства книги, (имя, фамилия, название, аннотация)
+            String[] bookProp = fileService.bookProp(book.getFilename());
+
+            book.setReliser(user);
+            if (!StringUtils.isEmpty(bookname)) {
+                book.setBookname(bookname);
+            } else {
+                if (bookProp[2] != null) {
+                    book.setBookname(bookProp[2]);
+                }
             }
-            String uuidFile = UUID.randomUUID().toString();
+            if (!StringUtils.isEmpty(author)) {
+                book.setAuthor(author);
+            } else {
+                if (bookProp[0] != null && bookProp[1] != null) {
+                    book.setAuthor(bookProp[0] + " " + bookProp[1]);
+                }
+            }
+            //добавляем картинку
+            addPictureFile(picture, book);
+
+            // добавляем книгу
+            addBookFile(bookname, author, file, book);
+
+        }
+        else {
+            book = new Book();
+            book.setBookname(bookname);
+            book.setReliser(user);
+            book.setAuthor(author);
+
+            //добавляем картинку
+            addPictureFile(picture, book);
+
+            // добавляем книгу
+            addBookFile(bookname, author, file, book);
+        }
+
+        bookRepo.save(book);
+    }
+
+    //добавляем книгу
+    private void addBookFile(String bookname,
+                             String author,
+                             MultipartFile file,
+                             Book book
+    ) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            String uuidFile = getString();
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
 
             // загружаем файл на сервер
@@ -53,7 +96,7 @@ public class BookService {
             //свойства книги, (имя, фамилия, название, аннотация)
             String[] bookProp = fileService.bookProp(resultFilename);
 
-            //если автор не определен, берем название из книги
+            //если автор не определен, берем автора из книги
             if (author == null || StringUtils.isEmpty(author)) {
                 if (bookProp[0] != null && bookProp[1] != null) {
                     book.setAuthor(bookProp[0] + " " + bookProp[1]);
@@ -66,10 +109,28 @@ public class BookService {
                 }
             }
         }
-
-        bookRepo.save(book);
     }
 
+    //добавляем картинку
+    private void addPictureFile(MultipartFile picture, Book book) throws IOException {
+        if (picture != null && !picture.isEmpty()) {
+            String uuidFile = getString();
+            String resultFilename = uuidFile + "." + picture.getOriginalFilename();
+            // загружаем картинку на сервер
+            picture.transferTo(new File(uploadPath + "/" + resultFilename));
+            book.setPictureName(resultFilename);
+        }
+    }
+
+    private String getString() {
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+        return UUID.randomUUID().toString();
+    }
+
+    // поиск по автору или по названию
     public List<Book> searchBook(String filter, String type) {
         List<Book> result = new ArrayList<>();
 

@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +16,9 @@ import ru.zinin.mylibrary.service.BookService;
 import ru.zinin.mylibrary.service.FileService;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class MainController {
@@ -25,6 +28,9 @@ public class MainController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private FileService fileService;
 
     @GetMapping("/")
     public String homePage() {
@@ -38,23 +44,65 @@ public class MainController {
             Model model
     ) {
         List<Book> books = bookService.searchBook(filter, type);
+        // добавляем аннотации к каждой книге
+        addAnnotation(books);
         model.addAttribute("filter", filter);
         model.addAttribute("type", type);
         model.addAttribute("books", books);
         return "main";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/main")
     public String addBook(
             @AuthenticationPrincipal User user,
             @RequestParam String bookname,
             @RequestParam String author,
             @RequestParam("file") MultipartFile file,
+            @RequestParam("picture")MultipartFile picture,
             Model model
     ) throws IOException {
-        bookService.addBook(bookname, author,user,file);
-        model.addAttribute("books", bookRepo.findAll());
+        bookService.addBookFile(bookname, author,user,file,picture,null);
+
+        List<Book> allBooks = bookRepo.findAll();
+        // добавляем аннотации к каждой книге
+        addAnnotation(allBooks);
+        model.addAttribute("books", allBooks);
         return "redirect:/main";
     }
 
+    private void addAnnotation(Collection<Book> allBooks) {
+        allBooks.forEach(item -> item.setAnnotation(fileService.bookProp(item.getFilename())[3] == null ? "No annotation" : fileService.bookProp(item.getFilename())[3]));
+    }
+
+    @GetMapping("/user-books/{user}")
+    public String userBooks(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable User user,
+            Model model,
+            @RequestParam(required = false) Book book
+    ) {
+        Set<Book> books = user.getBooks();
+        // добавляем аннотации к каждой книге
+        addAnnotation(books);
+        model.addAttribute("books", books);
+        model.addAttribute("book", book);
+        model.addAttribute("isCurrentUser", currentUser.equals(user));
+        return "my_books";
+    }
+
+    @PostMapping("/user-books/{user}")
+    public String updateBook(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable Long user,
+            @RequestParam("id") Book book,
+            @RequestParam String bookname,
+            @RequestParam String author,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("picture")MultipartFile picture
+    ) throws IOException {
+        if (book.getReliser().equals(currentUser)) {
+            bookService.addBookFile(bookname, author,currentUser,file,picture,book.getId());
+        }
+        return "redirect:/user-books/" + user;
+    }
 }

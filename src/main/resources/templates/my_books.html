@@ -1,0 +1,23 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+
+    <!--START-->
+    <th:block th:insert="~{parts/page_template :: start}"/>
+
+    <!--NAVBAR-->
+    <th:block th:insert="~{parts/navbar}"/>
+
+    <th:block th:if="${isCurrentUser}">
+        <hr class="my-4">
+        <!--ADD FORM-->
+        <div th:replace="~{parts/add_form}"/>
+        <hr class="my-4">
+    </th:block>
+
+
+    <!--LIST BOOK-->
+    <th:block th:insert="~{parts/list_book}"/>
+
+    <!--END-->
+    <th:block th:insert="~{parts/page_template :: end}"/>
+
+</th:block>
