@@ -2,6 +2,8 @@ package ru.zinin.mylibrary.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +37,7 @@ public class BookService {
                             Long bookId
     ) throws IOException {
         Book book;
-        if (bookId!=null){
+        if (bookId != null) {
             book = bookRepo.findBookById(bookId);
 
             //свойства книги, (имя, фамилия, название, аннотация)
@@ -62,8 +64,7 @@ public class BookService {
             // добавляем книгу
             addBookFile(bookname, author, file, book);
 
-        }
-        else {
+        } else {
             book = new Book();
             book.setBookname(bookname);
             book.setReliser(user);
@@ -131,15 +132,15 @@ public class BookService {
     }
 
     // поиск по автору или по названию
-    public List<Book> searchBook(String filter, String type) {
-        List<Book> result = new ArrayList<>();
+    public Page<Book> searchBook(String filter, String type, Pageable pageable) {
+        Page<Book> result = null;
 
         if (type != null && type.equals("name") && filter != null && !StringUtils.isEmpty(filter)) {
-            result = bookRepo.findByBookname(filter);
+            result = bookRepo.findByBookname(filter, pageable);
         }
         if (type != null && type.equals("author") && filter != null && !StringUtils.isEmpty(filter)) {
-            result = bookRepo.findByAuthor(filter);
+            result = bookRepo.findByAuthor(filter, pageable);
         }
-        return result.size() == 0 ? bookRepo.findAll() : result;
+        return result == null ? bookRepo.findAll(pageable) : result;
     }
 }

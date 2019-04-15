@@ -4,9 +4,13 @@
 
     <div class="text-center h2 mb-3">List of book</div>
 
+    <div class="text-center h3 mb-3" th:text="'number of books: '+${page.getTotalElements()}"></div>
+
+    <th:block th:insert="~{parts/pager::pager(${url},${page})}"/>
+
     <div class="container">
         <div class="row justify-content-around">
-            <th:block th:each="book:${books}">
+            <th:block th:each="book:${page.content}">
                 <div class="col-7 col-sm-6 col-md-4 col-xl-3">
                     <div class="card my-2">
                         <img th:if="${book.pictureName}" class="card-img-top" th:src="@{'/file/'+${book.pictureName}}">

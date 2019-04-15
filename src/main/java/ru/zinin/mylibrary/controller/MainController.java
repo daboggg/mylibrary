@@ -1,6 +1,11 @@
 package ru.zinin.mylibrary.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +21,8 @@ import ru.zinin.mylibrary.service.BookService;
 import ru.zinin.mylibrary.service.FileService;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -41,14 +45,16 @@ public class MainController {
     public String main(
             @RequestParam(required = false)String filter,
             @RequestParam(required = false) String type,
-            Model model
-    ) {
-        List<Book> books = bookService.searchBook(filter, type);
+            Model model,
+            @PageableDefault(sort = {"id"},direction = Sort.Direction.DESC)Pageable pageable
+            ) {
+        Page<Book> page = bookService.searchBook(filter, type, pageable);
         // добавляем аннотации к каждой книге
-        addAnnotation(books);
+        addAnnotation(page);
         model.addAttribute("filter", filter);
         model.addAttribute("type", type);
-        model.addAttribute("books", books);
+        model.addAttribute("url", "/main");
+        model.addAttribute("page", page);
         return "main";
     }
 
@@ -59,15 +65,20 @@ public class MainController {
             @RequestParam String author,
             @RequestParam("file") MultipartFile file,
             @RequestParam("picture")MultipartFile picture,
-            Model model
+            Model model,
+            @PageableDefault(sort = {"id"},direction = Sort.Direction.DESC)Pageable pageable
     ) throws IOException {
         bookService.addBookFile(bookname, author,user,file,picture,null);
 
-        List<Book> allBooks = bookRepo.findAll();
+        Page<Book> allBooks = bookRepo.findAll(pageable);
         // добавляем аннотации к каждой книге
         addAnnotation(allBooks);
         model.addAttribute("books", allBooks);
         return "redirect:/main";
+    }
+
+    private void addAnnotation(Page<Book> allBooks) {
+        allBooks.forEach(item -> item.setAnnotation(fileService.bookProp(item.getFilename())[3] == null ? "No annotation" : fileService.bookProp(item.getFilename())[3]));
     }
 
     private void addAnnotation(Collection<Book> allBooks) {
@@ -79,13 +90,18 @@ public class MainController {
             @AuthenticationPrincipal User currentUser,
             @PathVariable User user,
             Model model,
-            @RequestParam(required = false) Book book
+            @RequestParam(required = false) Book book,
+            @PageableDefault(sort = {"id"},direction = Sort.Direction.DESC)Pageable pageable
     ) {
-        Set<Book> books = user.getBooks();
+//        List<Book> books = user.getBooks().stream().collect(Collectors.toList());
+        Page<Book> page = bookRepo.findByReliser(user,pageable);
+//        System.out.println(page.getTotalElements());
         // добавляем аннотации к каждой книге
-        addAnnotation(books);
-        model.addAttribute("books", books);
+        addAnnotation(page.getContent());
+//        model.addAttribute("books", books);
         model.addAttribute("book", book);
+        model.addAttribute("url", "/user-books/"+user.getId());
+        model.addAttribute("page", page);
         model.addAttribute("isCurrentUser", currentUser.equals(user));
         return "my_books";
     }
@@ -100,7 +116,7 @@ public class MainController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("picture")MultipartFile picture
     ) throws IOException {
-        if (book.getReliser().equals(currentUser)) {
+        if (book!=null&&book.getReliser().equals(currentUser)) {
             bookService.addBookFile(bookname, author,currentUser,file,picture,book.getId());
         }
         return "redirect:/user-books/" + user;
