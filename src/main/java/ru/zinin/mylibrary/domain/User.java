@@ -1,15 +1,11 @@
 package ru.zinin.mylibrary.domain;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import sun.security.krb5.internal.ccache.Credentials;
 
-import javax.management.remote.JMXPrincipal;
 import javax.persistence.*;
-import javax.security.auth.kerberos.KerberosPrincipal;
-import java.security.Principal;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -21,7 +17,11 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotBlank(message = "Username cannot be empty")
+//    @Length(min = 5, max = 20, message = "enter a login between 5 and 20 characters long")
     private String username;
+//    @Length(min = 5,max = 32,message = "enter a password between 5 and 32 characters long")
+    @NotBlank(message = "Password cannot be empty")
     private String password;
     private boolean active;
 

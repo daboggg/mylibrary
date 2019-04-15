@@ -6,7 +6,11 @@
     <!--NAVBAR-->
     <th:block th:insert="~{parts/navbar}"/>
 
-    <form method="post" action="/user">
+    <hr class="my-4">
+
+    <div class="text-center h2 my-3">Editing users</div>
+
+    <form method="post" action="/user" class="ml-3">
         <input type="hidden" name="userId" th:value="${user.id}">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}">
         <input type="text" name="username" th:value="${user.username}">
@@ -16,6 +20,8 @@
         </div>
         <button type="submit">Save User</button>
     </form>
+
+    <hr class="my-4">
 
     <!--END-->
     <th:block th:insert="~{parts/page_template :: end}"/>

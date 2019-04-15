@@ -5,6 +5,8 @@
 
     <hr class="my-4 mt-5">
 
+    <div class="text-center h2 mb-3" th:text="${isLoginPage}?'Input login and password':'Registration'"></div>
+
     <div th:if="${message}">
         <div th:text="${message}" class="alert alert-danger" role="alert">
             Это светлое уведомление
@@ -12,18 +14,32 @@
         <hr class="my-4 mt-3">
     </div>
 
+    <!--<th:block th:if="${session.SPRING_SECURITY_LAST_EXCEPTION}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></th:block>-->
+
+   <!-- <th:block th:each="item:${session.getValueNames()}">
+        <div th:text="${item.toString()}"></div>
+    </th:block>-->
+
     <div class="container">
-        <form th:action="${isLoginPage}?'/login':'/registration'" method="post" class="col-8">
+        <form th:action="${isLoginPage}?'/login':'/registration'" method="post">
             <div class="form-group row">
                 <label for="inputUsername" class="col-sm-2 col-form-label">Username</label>
                 <div class="col-sm-10">
-                    <input type="text" name="username" class="form-control" id="inputUsername" placeholder="input username">
+                    <input type="text" name="username" th:value="${user}?${user.username}:_"
+                           th:class="${usernameError}?'is-invalid form-control':'form-control'" id="inputUsername" placeholder="input username">
+                    <div th:if="${usernameError}" th:text="${usernameError}" class="invalid-feedback">
+
+                    </div>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
                 <div class="col-sm-10">
-                    <input type="password" name="password" class="form-control" id="inputPassword" placeholder="input password">
+                    <input type="password" name="password"
+                           th:class="${passwordError}?'is-invalid form-control':'form-control'" id="inputPassword" placeholder="input password">
+                    <div th:if="${passwordError}" th:text="${passwordError}" class="invalid-feedback">
+                        CCC
+                    </div>
                 </div>
             </div>
             <input type="hidden" name="_csrf" th:value="${_csrf.token}">

@@ -1,24 +1,36 @@
 <th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <nav class="mt-3 navbar navbar-expand-sm navbar-primary bg-light sticky-top">
         <a class="navbar-brand text-dark" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon">[...]</span>
+        </button>
 
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/main">Books</a>
-            </li>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/main">Books</a>
+                </li>
 
-            <!--если юзер имеет роль ADMIN, добавить в навбал ссылку ListUser-->
-            <th:block th:each="item:${#authentication.authorities}">
+                <!--если юзер имеет роль ADMIN, добавить в навбал ссылку ListUser-->
+                <th:block th:each="item:${#authentication.authorities}">
                     <li th:if="${#strings.contains(item,'ADMIN')}" class="nav-item">
                         <a class="nav-link" href="/user" >ListUser</a>
                     </li>
-            </th:block>
+                </th:block>
 
-            <li class="nav-item active" sec:authorize="authenticated">
-                <a class="nav-link" th:href="@{'/user-books/'+${#authentication.principal.id}}">My books</a>
-            </li>
+                <li class="nav-item active" sec:authorize="authenticated">
+                    <a class="nav-link" th:href="@{'/user-books/'+${#authentication.principal.id}}">My books</a>
+                </li>
 
-        </ul>
+                <li class="nav-item active" sec:authorize="authenticated">
+                    <a class="nav-link" th:href="@{'/user/profile'}">Profile</a>
+                </li>
+
+            </ul>
+        </div>
+
+
 
         <span sec:authorize="isAuthenticated()" sec:authentication="name" class="navbar-text mr-3" ></span>
         <span sec:authorize="!isAuthenticated()" class="navbar-text mr-3">Please, login</span>
