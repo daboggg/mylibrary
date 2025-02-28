@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Material Symbols - Outlined Set -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <!-- Material Symbols - Rounded Set -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet"/>
+    <!-- Material Symbols - Sharp Set -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp" rel="stylesheet"/>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}"/>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" media="screen,projection"/>
+
+    <!--  JavaScript -->
+    <script src="{% static 'js/materialize.js' %}"></script>
+    <script src="{% static 'js/datepicker_settings.js' %}"></script>
+</head>
+<body>
+
+<form id="logout-form" action="{% url 'users:logout' %}" method="post">
+    {% csrf_token %}
+</form>
+
+
+<ul id="dropdown1" class="dropdown-content">
+    <li><a href="{% url 'users:profile' %}">Профиль</a></li>
+    <li class="divider"></li>
+    {% if user.is_superuser %}
+        <li><a href="{% url "admin:index" %}">Админ панель</a></li>
+        <li class="divider"></li>
+    {% endif %} 
+    <li>
+        <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Выйти</a>
+    </li>
+</ul>
+
+<ul id="dropdown2" class="dropdown-content">
+    <li><a href="{% url 'users:profile' %}">Профиль</a></li>
+    <li class="divider"></li>
+    {% if user.is_superuser %}
+        <li><a href="{% url "admin:index" %}">Админ панель</a></li>
+        <li class="divider"></li>
+    {% endif %} 
+    <li>
+        <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Выйти</a>
+    </li>
+</ul>
+
+<nav class="navbar teal container">
+    <div class="nav-wrapper">
+        <a href="{% url 'library:home' %}" class="brand-logo ml-2">LIB</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            {% if user.is_authenticated %}
+            	<li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">Javascript</a></li>
+                <li><a href="mobile.html">Mobile</a></li>
+                <li><a class="dropdown-trigger-nav" href="#!" data-target="dropdown1"><i class="material-icons left mr-0">account_circle</i>{{ user.username }}</a>
+                </li>
+            {% else %}
+                <li><a href="{% url 'users:register' %}">Регистрация</a>
+                <li><a href="{% url 'users:login' %}">Войти</a></li>
+            {% endif %} 
+        </ul>
+    </div>
+</nav>
+
+<ul class="sidenav" id="mobile-demo">
+    {% if user.is_authenticated %}
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">Javascript</a></li>
+        <li><a href="mobile.html">Mobile</a></li>
+        <li><a class="dropdown-trigger-sidebar" href="#!" data-target="dropdown2"><i class="material-icons">account_circle</i>{{ user.username }}</a>
+        </li>
+    {% else %}
+        <li><a href="{% url 'users:register' %}">Регистрация</a>
+        <li><a href="{% url 'users:login' %}">Войти</a></li>
+    {% endif %} 
+</ul>
+
+
+<div class="container">
+    {% block content %}
+
+    {% endblock %}
+
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        M.Sidenav.init(document.querySelectorAll('.sidenav'), {
+            autoClose: true
+        });
+        M.Dropdown.init(document.querySelectorAll('.dropdown-trigger-nav'), {
+            coverTrigger: false,
+            constrainWidth: false,
+            alignment: 'right'
+        })
+        M.Dropdown.init(document.querySelectorAll('.dropdown-trigger-sidebar'), {
+            coverTrigger: false,
+            constrainWidth: false,
+        })
+    });
+
+</script>
+
+</body>
+</html>
