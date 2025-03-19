@@ -6,22 +6,23 @@ class Book(models.Model):
     author = models.ManyToManyField('Author', blank=True, related_name='books')
 
     book_title = models.CharField(max_length=100)
-    annotation = models.TextField()
-    keywords = models.CharField(max_length=300)
-    sequence = models.CharField(max_length=100)
+    annotation = models.TextField(blank=True, null=True)
+    keywords = models.CharField(max_length=300, blank=True, null=True)
+    sequence = models.CharField(max_length=100, blank=True, null=True)
     book_file = models.FileField(upload_to='books/')
+    coverpage = models.ImageField(upload_to='coverpages/', null=True, blank=True)
 
 
 class Author(models.Model):
-    first_name = models.CharField(max_length=50, blank=True)
-    middle_name = models.CharField(max_length=50, blank=True)
-    last_name = models.CharField(max_length=50, blank=True)
-    nickname = models.CharField(max_length=50, blank=True)
-    home_page = models.CharField(max_length=200, blank=True)
-    email = models.CharField(max_length=200, blank=True)
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    middle_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    nickname = models.CharField(max_length=50, blank=True, null=True)
+    home_pages = models.CharField(max_length=500, blank=True, null=True)
+    emails = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name} {self.middle_name}'
+        return f'{self.pk} {self.first_name} {self.last_name} {self.middle_name}'
 
 
 class Genre(models.Model):
