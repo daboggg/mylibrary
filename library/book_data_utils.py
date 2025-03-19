@@ -1,12 +1,17 @@
+import logging
+
 import xmltodict
 from bs4 import BeautifulSoup
-from django.contrib.admin.templatetags.admin_list import result_list
 
 from library.models import Author, Genre
 
+log = logging.getLogger(__name__)
 
-def get_genres(soup: BeautifulSoup):
-    title_info = xmltodict.parse(str(soup.find('title-info'))).get('title-info')
+
+def get_genres(title_info: dict) -> list[str] | None:
+    """
+    возвращает список жанров или None
+    """
     genres = title_info.get('genre')
     if genres:
         if isinstance(genres, str):
@@ -17,17 +22,19 @@ def get_genres(soup: BeautifulSoup):
     return genres
 
 
-def check_book_exists(soup: BeautifulSoup):
+def check_book_exists(title_info: dict) -> bool:
+    """
+    проверяет есть ли в базе данных книга
+    """
     result = []
-    title_info = xmltodict.parse(str(soup.find('title-info'))).get('title-info')
     book_title = title_info.get('book-title')
     authors = title_info.get('author')
+
     if authors:
         if isinstance(authors, dict):
             authors = [authors]
     else:
         authors = []
-
 
     for author in authors:
         first_name = author.get('first-name')
@@ -52,37 +59,12 @@ def check_book_exists(soup: BeautifulSoup):
     return any(result)
 
 
-
-
-    # result = []
-    # authors: ResultSet = soup.find('title-info').find_all('author')
-    # book_title = soup.find('title-info').find('book-title')
-    #
-    # for author in authors:
-    #     first_name = author.find('first-name')
-    #     last_name = author.find('last-name')
-    #     nickname = author.find('nickname')
-    #
-    #     # проверка по фамилии, имени и названию книги
-    #     if first_name and last_name and book_title:
-    #         try:
-    #             item = Author.objects.get(first_name__iexact=first_name.text.strip(),
-    #                                       last_name__iexact=last_name.text.strip(), )
-    #             result.append(item.books.filter(book_title__iexact=book_title.text.strip()))
-    #         except Author.DoesNotExist:
-    #             pass
-    #     # проверка по никнейму и названию книги
-    #     if nickname and book_title:
-    #         try:
-    #             item = Author.objects.get(nickname__exact=nickname.text.strip())
-    #             result.append(item.books.filter(book_title__iexact=book_title.text.strip()))
-    #         except Author.DoesNotExist:
-    #             pass
-    # return any(result)
-
-
-def create_or_get_authors(soup: BeautifulSoup):
-    title_info = xmltodict.parse(str(soup.find('title-info'))).get('title-info')
+def create_or_get_authors(title_info: dict) -> list[Author]:
+    """
+    получает автора из базы данных,
+    если в базе данных нет, создает автора,
+    возвращает список авторов
+    """
     authors = title_info.get('author')
     if authors:
         if isinstance(authors, dict):
@@ -103,20 +85,17 @@ def create_or_get_authors(soup: BeautifulSoup):
                                                         last_name__iexact=last_name,
                                                         middle_name__iexact=middle_name):
                     add_contacts_to_author(author, author_from_db)
-                    print(3)
                     result.append(author_from_db)
 
             elif first_name and last_name:
                 if author_from_db := Author.objects.get(first_name__iexact=first_name,
                                                         last_name__iexact=last_name):
                     add_contacts_to_author(author, author_from_db)
-                    print(2)
                     result.append(author_from_db)
 
             elif nickname:
                 if author_from_db := Author.objects.get(nickname__iexact=nickname):
                     add_contacts_to_author(author, author_from_db)
-                    print(1)
                     result.append(author_from_db)
             else:
                 raise Author.DoesNotExist
@@ -135,7 +114,10 @@ def create_or_get_authors(soup: BeautifulSoup):
     return result
 
 
-def add_contacts_to_author(author, author_from_db):
+def add_contacts_to_author(author, author_from_db) -> None:
+    """
+    добавляет домашнюю страницу и email к автору
+    """
     home_pages = author.get('home-page')
     if home_pages:
         if isinstance(home_pages, str):
@@ -166,12 +148,10 @@ def add_contacts_to_author(author, author_from_db):
         author_from_db.emails = ', '.join(emails)
 
 
-def get_book_title(soup: BeautifulSoup)->str:
-    title_info = xmltodict.parse(str(soup.find('title-info'))).get('title-info')
-    return title_info.get('book-title')
-
-
-def get_annotation(soup: BeautifulSoup)->str|None:
+def get_annotation(soup: BeautifulSoup) -> str | None:
+    """
+    возвращает аннотацию книги
+    """
     annotation = soup.find('title-info').find('annotation')
     if annotation:
         return ' '.join(annotation.text.split())
@@ -179,8 +159,11 @@ def get_annotation(soup: BeautifulSoup)->str|None:
         return annotation
 
 
-def get_sequence(soup: BeautifulSoup)->str|None:
-    title_info = xmltodict.parse(str(soup.find('title-info'))).get('title-info')
+def get_sequence(title_info: dict) -> str | None:
+    """
+    если книга входит в серию и в серии,
+     возвращает строку с названиями серий через запятую
+    """
     sequence = title_info.get('sequence')
     if not sequence:
         return sequence
@@ -197,7 +180,10 @@ def get_sequence(soup: BeautifulSoup)->str|None:
     return ', '.join(result)
 
 
-def get_keywords(soup: BeautifulSoup)->str|None:
+def get_keywords(soup: BeautifulSoup) -> str | None:
+    """
+    возвращает строку с ключевыми словами
+    """
     annotation = soup.find('title-info').find('keywords')
     if annotation:
         return annotation.text
@@ -205,14 +191,12 @@ def get_keywords(soup: BeautifulSoup)->str|None:
         return annotation
 
 
-
-# <coverpage>
-#     <image l:href="#cover.jpg"/></coverpage>
-# <binary id="cover.jpg" content-type="image/jpg">
-
-def get_binary_img(soup: BeautifulSoup)->str|None:
-    title_info = xmltodict.parse(str(soup.find('title-info'))).get('title-info')
+def get_binary_img(soup: BeautifulSoup) -> str | None:
+    """
+    возвращает данные изображения закодированные в base64
+    """
     fiction_book = xmltodict.parse(str(soup.find('FictionBook'))).get('FictionBook')
+    title_info = fiction_book.get('description').get('title-info')
     coverpage = title_info.get('coverpage')
     if not coverpage and coverpage.get('image') and coverpage.get('image').get('@l:href'):
         return None

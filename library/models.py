@@ -17,7 +17,7 @@ class Author(models.Model):
     first_name = models.CharField(max_length=50, blank=True, null=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
-    nickname = models.CharField(max_length=50, blank=True, null=True)
+    nickname = models.CharField(unique=True, max_length=50, blank=True, null=True)
     home_pages = models.CharField(max_length=500, blank=True, null=True)
     emails = models.CharField(max_length=500, blank=True, null=True)
 
