@@ -1,3 +1,4 @@
+import logging
 import os
 
 from .settings import *
@@ -28,3 +29,5 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
+
+LOG_LEVEL = logging.WARNING

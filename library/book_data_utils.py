@@ -3,6 +3,7 @@ import logging
 import xmltodict
 from bs4 import BeautifulSoup
 
+from library.kandinsky import get_image_from_kandinsky
 from library.models import Author, Genre
 
 log = logging.getLogger(__name__)
@@ -193,7 +194,8 @@ def get_keywords(soup: BeautifulSoup) -> str | None:
 
 def get_binary_img(soup: BeautifulSoup) -> str | None:
     """
-    возвращает данные изображения закодированные в base64
+    возвращает данные изображения закодированные в base64,
+    если изображение присутствует в книге
     """
     fiction_book = xmltodict.parse(str(soup.find('FictionBook'))).get('FictionBook')
     title_info = fiction_book.get('description').get('title-info')
@@ -209,3 +211,35 @@ def get_binary_img(soup: BeautifulSoup) -> str | None:
         if bin.get('@id') == href_img:
             return bin.get('#text')
     return None
+
+
+def create_and_get_img(soup: BeautifulSoup) -> str | None:
+    """
+    создает изображение, добаляет в книгу и
+    возвращает данные изображения закодированные в base64,
+    """
+    title_info = soup.find('description').find('title-info')
+    coverpage = soup.find('coverpage')
+    annotation = get_annotation(soup)
+    if coverpage:
+        coverpage.extract()
+    coverpage_tag = soup.new_tag("coverpage")
+    image_tag = soup.new_tag("image", attrs={"l:href": "#cover.jpg"})
+    coverpage_tag.append(image_tag)
+    title_info.append(coverpage_tag)
+
+    if binary := soup.find('binary', {"content-type": "image/jpeg", "id": "cover.jpg"}):
+        binary.extract()
+
+    if annotation:
+        image =  get_image_from_kandinsky(annotation)
+    else:
+        image =  get_image_from_kandinsky(f"Обложка для неизвестной книги")
+
+    binary_tag = soup.new_tag("binary", attrs={"content-type": "image/jpeg", "id": "cover.jpg"},
+                              string=image)
+    soup.FictionBook.append(binary_tag)
+
+    return image
+
+

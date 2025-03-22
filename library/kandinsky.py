@@ -1,8 +1,17 @@
 import json
+import logging
+import os
 import time
 
 import requests
-from base64 import decodebytes
+from dotenv import load_dotenv
+
+load_dotenv()
+
+API_KEY = os.getenv("KANDINSKY_API_KEY")
+SECRET_KEY = os.getenv("KANDINSKY_SECRET_KEY")
+
+log = logging.getLogger(__name__)
 
 
 class Text2ImageAPI:
@@ -19,7 +28,7 @@ class Text2ImageAPI:
         data = response.json()
         return data[0]['id']
 
-    def generate(self, prompt, model, images=1, width=1024, height=1024):
+    def generate(self, prompt, model, images=1, width=768, height=1024):
         params = {
             "type": "GENERATE",
             "numImages": images,
@@ -27,7 +36,8 @@ class Text2ImageAPI:
             "height": height,
             "generateParams": {
                 "query": f"{prompt}"
-            }
+            },
+            "images": ["string"]
         }
 
         data = {
@@ -49,17 +59,13 @@ class Text2ImageAPI:
             time.sleep(delay)
 
 
-if __name__ == '__main__':
-    api = Text2ImageAPI('https://api-key.fusionbrain.ai/', 'EBDBCE9493418441F1EA670FB8CF451D', '8C4E3804D514CDB90B1228E73933A0C6')
-    model_id = api.get_model()
-    print(time.ctime())
-    uuid = api.generate("""
-    Морозное утро в городе Усинск, много людей в теплой одежде
-                
-    """, model_id)
-    images = api.check_generation(uuid)
-    # print(images)
-    with open('test.jpg', 'wb') as f:
-        f.write(decodebytes(images[0].encode()))
+def get_image_from_kandinsky(prompt:str):
 
-    print(time.ctime())
+    api = Text2ImageAPI('https://api-key.fusionbrain.ai/', API_KEY, SECRET_KEY)
+    model_id = api.get_model()
+    log.info(time.ctime())
+    uuid = api.generate(prompt, model_id)
+    images = api.check_generation(uuid)
+
+    log.info(time.ctime())
+    return images[0]

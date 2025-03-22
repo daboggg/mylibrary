@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import logging
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -157,16 +157,26 @@ LOGIN_URL = 'users:login'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+LOG_LEVEL = logging.INFO
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "{levelname} - {module}:{funcName}:{lineno} - {message}",
+            "style": "{",
+        }
+    },
     "handlers": {
         "console": {
+            "level": LOG_LEVEL,
             "class": "logging.StreamHandler",
+            "formatter": "simple",
         },
     },
     "root": {
         "handlers": ["console"],
-        "level": "INFO",
+        "level": LOG_LEVEL,
     },
 }
