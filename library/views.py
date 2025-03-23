@@ -5,6 +5,7 @@ import xmltodict
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
+from django.forms.utils import ErrorList
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -25,6 +26,7 @@ class UploadBook(CreateView):
     form_class = BookUploadForm
     template_name = 'library/upload_book.html'
     success_url = reverse_lazy('library:home')
+    extra_context = {'title': 'Добавить книгу'}
 
 
     def form_valid(self, form):
@@ -35,13 +37,13 @@ class UploadBook(CreateView):
 
         # проверка на существование книги
         if check_book_exists(title_info):
-            form.add_error('book_file', ValidationError('Такая книга уже существует'))
+            form.add_error(None, ValidationError('Такая книга уже существует'))
             return super().form_invalid(form)
 
         authors = create_or_get_authors(title_info)
         # если нет авторов
         if not authors:
-            form.add_error('book_file', ValidationError('Книги без автора не может быть'))
+            form.add_error(None, ValidationError('Книги без автора не может быть'))
             return super().form_invalid(form)
 
         try:
@@ -78,11 +80,11 @@ class UploadBook(CreateView):
                         )
         except IntegrityError as e:
             log.exception('проблема с сохранением в бд')
-            form.add_error('book_file', ValidationError('ФИО или никнейм автора не уникален'))
+            form.add_error(None, ValidationError('ФИО или никнейм автора не уникален'))
             return super().form_invalid(form)
         except Exception as e:
             log.exception('ошибка добавления книги')
-            form.add_error('book_file', ValidationError('Ошибка добавления книги, попробуйте еще раз'))
+            form.add_error(None, ValidationError('Ошибка добавления книги, попробуйте еще раз'))
             return super().form_invalid(form)
 
         log.info('form is filled')
