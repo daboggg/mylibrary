@@ -1,4 +1,40 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-	<h1>Home Page</h1>
+    <h1>Home Page</h1>
+    <div id="app">
+
+        <div v-if="tr" class="preloader-wrapper active">
+            <div class="spinner-layer spinner-red-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+
+
+        [[ message ]]
+        <button @click="tr=!tr">hhhhh</button>
+    </div>
+
+    <script>
+        const {createApp} = Vue
+
+        createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    message: 'Hello Vue!',
+                    tr: true
+                }
+            }
+        }).mount('#app')
+    </script>
 {% endblock %}

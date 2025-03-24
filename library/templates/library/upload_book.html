@@ -4,30 +4,65 @@
     {{ title }}
 {% endblock %}
 {% block content %}
-    <div class="row valign-wrapper" style="min-height: 80vh;">
+    <div id="app" class="row valign-wrapper" style="min-height: 80vh;">
         <div class="col s12 m8 offset-m2 l6 offset-l3">
             <div class="card-panel card">
-                <div class="center-align">
-                    <span class="card-title">{{ title }}</span>
-                    <h6 class="ml-1 red-text">{{ form.non_field_errors }}</h6>
-                </div>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="file-field input-field">
-                        
-                        <div class="btn">
-                            <span>Книга</span>
-                            <input type="file" name="book_file" accept=".fb2">
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                        <h6 class="red-text">{{ form.book_file.errors }}</h6>
+
+                <div v-show="!preloader">
+                    <div class="center-align">
+                        <div class="card-title">{{ title }}</div>
+                        <h6 class="ml-1 red-text">{{ form.non_field_errors }}</h6>
                     </div>
-                    <button type="submit" class="btn right">Добавить</button>
-                    <div class="clearfix"></div>
-                </form>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="file-field input-field">
+
+                            <div class="btn">
+                                <span>Книга</span>
+                                <input type="file" name="book_file" accept=".fb2">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                            <h6 class="red-text">{{ form.book_file.errors }}</h6>
+                        </div>
+                        <button type="submit" class="btn right" @click="preloader=!preloader">Добавить</button>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+
+                <div v-show="preloader">
+                    <div class="center-align">
+                        <div class="card-title">Книга загружается</div>
+                    </div>
+                    <div class="center-align">
+                        <div class="preloader-wrapper small active mt-2">
+                            <div class="spinner-layer spinner-green-only">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <script>
+        const {createApp} = Vue
+        createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    preloader: false
+                }
+            }
+        }).mount('#app')
+    </script>
 {% endblock %}
