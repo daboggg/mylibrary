@@ -1,14 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'sidebar-content.html' %}
 {% load static %}
 
 {% block sidebar %}
-
-    <div class="col s10 offset-s1 m5 l4 sidebar card flow-text" style="min-height: 85vh">
+    <div class="card">
         <div class="pxy-1 teal-text">
             <h4>Каталог</h4>
             <h6>Наиболее популярные жанры:</h6>
 
-            
+
             <div class="collection">
                 <a href="#!" class="collection-item"><h6>Исторические Приключения Фантастика Детектив</h6></a>
                 <a href="#!" class="collection-item"><h6>Исторические Приключения</h6></a>
@@ -21,31 +20,30 @@
 {% endblock %}
 
 {% block content %}
-    <div class="col m7 l8">
-        <div class="card-panel teal lighten-2 white-text">
-            <h1>This is the main website</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                culpa qui officia deserunt mollit anim id est laborum.</p>
-        </div>
-        <div class="divider"></div>
-        <div class="card-panel">
-            <h3>Some more content</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ante enim, sollicitudin non tristique
-                ut, iaculis in eros. Donec et purus eget tellus suscipit sollicitudin. Suspendisse erat turpis,
-                faucibus ut blandit non, bibendum non tortor. Nullam et neque sed felis facilisis finibus. Nulla
-                dictum elit enim, in finibus dolor ultrices id. Proin suscipit ipsum imperdiet dui hendrerit tempus.
-                Donec quis aliquam velit. In viverra enim orci, nec tristique mi mollis id. Etiam a luctus eros.
-                Duis convallis sem arcu, quis posuere tellus accumsan vel. Nunc augue nunc, tempor vel ornare a,
-                congue ut nibh. Donec viverra arcu dui, eu rutrum ipsum elementum at. Proin ac quam ac est tincidunt
-                lobortis vitae quis risus. <br><br>
-                Donec id mollis erat. Proin porttitor tincidunt dui, ut luctus turpis lacinia a. Donec in maximus
-                ligula, sit amet elementum erat. Curabitur rhoncus eleifend euismod. In a fringilla tellus, sed
-                placerat felis. Pellentesque dictum risus nibh, vel sollicitudin eros facilisis nec. Proin sed
-                auctor est. Vestibulum iaculis, eros ac sagittis sagittis, dui magna tempor arcu, in imperdiet
-                libero neque ut odio.</p>
-        </div>
+
+    <div class="card-panel teal lighten-2 white-text">
+        <h1>This is the main website</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
+            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+    <div class="divider"></div>
+    <div class="card-panel">
+        <h3>Some more content</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ante enim, sollicitudin non tristique
+            ut, iaculis in eros. Donec et purus eget tellus suscipit sollicitudin. Suspendisse erat turpis,
+            faucibus ut blandit non, bibendum non tortor. Nullam et neque sed felis facilisis finibus. Nulla
+            dictum elit enim, in finibus dolor ultrices id. Proin suscipit ipsum imperdiet dui hendrerit tempus.
+            Donec quis aliquam velit. In viverra enim orci, nec tristique mi mollis id. Etiam a luctus eros.
+            Duis convallis sem arcu, quis posuere tellus accumsan vel. Nunc augue nunc, tempor vel ornare a,
+            congue ut nibh. Donec viverra arcu dui, eu rutrum ipsum elementum at. Proin ac quam ac est tincidunt
+            lobortis vitae quis risus. <br><br>
+            Donec id mollis erat. Proin porttitor tincidunt dui, ut luctus turpis lacinia a. Donec in maximus
+            ligula, sit amet elementum erat. Curabitur rhoncus eleifend euismod. In a fringilla tellus, sed
+            placerat felis. Pellentesque dictum risus nibh, vel sollicitudin eros facilisis nec. Proin sed
+            auctor est. Vestibulum iaculis, eros ac sagittis sagittis, dui magna tempor arcu, in imperdiet
+            libero neque ut odio.</p>
     </div>
 {% endblock %}
