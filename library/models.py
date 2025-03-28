@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 class Book(models.Model):
+    owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name='books')
     genres = models.ManyToManyField('Genre', blank=True, related_name='books')
 
     author = models.ManyToManyField('Author', blank=True, related_name='books')
@@ -11,6 +13,12 @@ class Book(models.Model):
     sequence = models.CharField(max_length=100, blank=True, null=True)
     book_file = models.FileField(upload_to='books/')
     coverpage = models.ImageField(upload_to='coverpages/', null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.book_title
 
 
 class Author(models.Model):

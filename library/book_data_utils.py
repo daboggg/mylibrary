@@ -200,7 +200,7 @@ def get_binary_img(soup: BeautifulSoup) -> str | None:
     fiction_book = xmltodict.parse(str(soup.find('FictionBook'))).get('FictionBook')
     title_info = fiction_book.get('description').get('title-info')
     coverpage = title_info.get('coverpage')
-    if not coverpage and coverpage.get('image') and coverpage.get('image').get('@l:href'):
+    if not coverpage or  not coverpage.get('image') or not coverpage.get('image').get('@l:href'):
         return None
     href_img = coverpage.get('image').get('@l:href')[1:]
     binary = fiction_book.get('binary')
@@ -220,6 +220,8 @@ def create_and_get_img(soup: BeautifulSoup) -> str | None:
     """
     title_info = soup.find('description').find('title-info')
     coverpage = soup.find('coverpage')
+    book_title = title_info.find('book-title')
+    if book_title: book_title = book_title.text
     annotation = get_annotation(soup)
     if coverpage:
         coverpage.extract()
@@ -234,7 +236,7 @@ def create_and_get_img(soup: BeautifulSoup) -> str | None:
     if annotation:
         image =  get_image_from_kandinsky(annotation)
     else:
-        image =  get_image_from_kandinsky(f"Обложка для неизвестной книги")
+        image =  get_image_from_kandinsky("Обложка для неизвестной книги" if not book_title else book_title)
 
     binary_tag = soup.new_tag("binary", attrs={"content-type": "image/jpeg", "id": "cover.jpg"},
                               string=image)

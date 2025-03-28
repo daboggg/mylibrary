@@ -2,32 +2,39 @@ import base64
 import logging
 
 import xmltodict
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
 from django.forms.utils import ErrorList
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 
 from library.book_data_utils import check_book_exists, create_or_get_authors, get_genres, get_annotation, get_sequence, \
     get_keywords, get_binary_img, create_and_get_img
 from library.forms import BookUploadForm
+from library.models import Book
 from library.parserFB2 import get_soup_from_fb2
 
 log = logging.getLogger(__name__)
 
 
-def home(request):
-    return render(request, 'library/home.html')
+class HomeView(ListView):
+    model = Book
+    template_name = 'library/home.html'
+    extra_context = {'title': 'Главная страница'}
+    context_object_name = 'books'
+
+    def get_queryset(self):
+        return Book.objects.order_by('-created_at')[:7]
 
 
-class UploadBook(CreateView):
+class UploadBook(LoginRequiredMixin, CreateView):
     form_class = BookUploadForm
     template_name = 'library/upload_book.html'
     success_url = reverse_lazy('library:home')
     extra_context = {'title': 'Добавить книгу'}
-
 
     def form_valid(self, form):
         soup = get_soup_from_fb2(form.instance.book_file)
@@ -53,6 +60,7 @@ class UploadBook(CreateView):
                     author.save()
 
                 form.save()
+                form.instance.owner = self.request.user
                 form.instance.book_file = book_file_instance
                 form.instance.author.set(authors)
                 form.instance.genres.set(get_genres(title_info))

@@ -6,5 +6,5 @@ app_name = 'library'
 
 urlpatterns = [
     path('upload-book', views.UploadBook.as_view(), name='upload_book'),
-    path('', views.home, name='home'),
+    path('', views.HomeView.as_view(), name='home'),
 ]
