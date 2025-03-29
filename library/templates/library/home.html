@@ -3,28 +3,38 @@
 {% load library_tags %}
 
 {% block sidebar %}
+
     <div class="card">
         <div class="pxy-1 teal-text">
-            <h4>Каталог</h4>
-            <h6>Наиболее популярные жанры:</h6>
-
-
-            <div class="collection">
-                <a href="#!" class="collection-item"><h6>Исторические Приключения Фантастика Детектив</h6></a>
-                <a href="#!" class="collection-item"><h6>Исторические Приключения</h6></a>
-                <a href="#!" class="collection-item"><h6>Исторические Приключения</h6></a>
+            <h6>
+                <span>Всего книг: </span>
+                <span class="new badge" data-badge-caption="">{% get_total_books %}</span>
+            </h6>
+            {% get_genres 'most_popular' as genres %}
+            {% if genres %}
+            	<h5>Наиболее популярные жанры:</h5>
+                <div class="collection">
+                {% for genre in genres %}
+                    <a href="#!" class="collection-item">
+                        <div class="valign-wrapper" style="display: flex; justify-content: space-between">
+                            <span>{{ genre.genre_rus}}</span>
+                            <span>{{ genre.book_count }}</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            
             </div>
+            {% endif %} 
         </div>
     </div>
-    {% get_catalog_of_genres 'most_popular' %}
-
 {% endblock %}
 
 {% block content %}
-    
+
+
     {% for book in books %}
-    	<h4>{{ book.book_title }}</h4>
+        <h4>{{ book.book_title }} | {{ book.sm }}</h4>
     {% endfor %}
-    
+
 
 {% endblock %}
