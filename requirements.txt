@@ -13,6 +13,7 @@ lxml==5.3.1
 pillow==11.1.0
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
+pytils==0.4.1
 requests==2.32.3
 soup2dict==2.1.0
 soupsieve==2.6
