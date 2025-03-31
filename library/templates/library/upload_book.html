@@ -19,14 +19,16 @@
 
                             <div class="btn">
                                 <span>Книга</span>
-                                <input type="file" name="book_file" accept=".fb2">
+                                <input type="file" onchange="document.getElementById('submit_btn').disabled = !event.target.value" name="book_file" accept=".fb2">
                             </div>
                             <div class="file-path-wrapper">
                                 <input class="file-path validate" type="text">
                             </div>
                             <h6 class="red-text">{{ form.book_file.errors }}</h6>
                         </div>
-                        <button type="submit" class="btn right" @click="preloader=!preloader">Добавить</button>
+                        <button id="submit_btn" type="submit" disabled class="btn right" @click="preloader=!preloader">
+                            Добавить
+                        </button>
                         <div class="clearfix"></div>
                     </form>
                 </div>
