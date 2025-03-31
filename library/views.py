@@ -25,7 +25,7 @@ class HomeView(ListView):
     context_object_name = 'books'
 
     def get_queryset(self):
-        return Book.objects.order_by('-created_at')[:7]
+        return Book.objects.prefetch_related('author').order_by('-created_at')[:7]
 
 
 class UploadBook(LoginRequiredMixin, CreateView):

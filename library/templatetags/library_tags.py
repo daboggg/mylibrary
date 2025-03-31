@@ -5,6 +5,22 @@ from library.models import Genre, Book, Author
 
 register = template.Library()
 
+@register.inclusion_tag("library/inclusion_tags/book_card_avers.html")
+def get_book_card_avers(book: Book):
+    return {
+        'authors': book.author.all(),
+        'sequence': book.sequence.split(',') if book.sequence else [],
+        'keywords': book.keywords.split(',') if book.keywords else [],
+    }
+
+@register.inclusion_tag("library/inclusion_tags/book_card_revers.html")
+def get_book_card_reverse(book: Book):
+    return {
+        'annotation': book.annotation,
+        'book_title': book.book_title,
+        'authors': book.author.all(),
+    }
+
 @register.simple_tag
 def get_genres(arg=None):
     if arg == 'most_popular':

@@ -162,7 +162,7 @@ def get_annotation(soup: BeautifulSoup) -> str | None:
 
 def get_sequence(title_info: dict) -> str | None:
     """
-    если книга входит в серию и в серии,
+    если книга входит в серию или в серии,
      возвращает строку с названиями серий через запятую
     """
     sequence = title_info.get('sequence')
@@ -174,7 +174,7 @@ def get_sequence(title_info: dict) -> str | None:
     result = []
     for s in sequence:
         if s.get('@number'):
-            result.append(f'{s.get("@name")}:{s.get("@number")}')
+            result.append(f'{s.get("@name")}: {s.get("@number")}')
         else:
             result.append(s.get('@name'))
 

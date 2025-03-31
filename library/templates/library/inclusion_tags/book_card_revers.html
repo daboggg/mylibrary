@@ -1,0 +1,20 @@
+{% load library_tags %}
+
+{% if annotation %}
+    <h6><b>Аннотация к книге:</b></h6>
+    <p>{{ annotation }}</p>
+{% endif %} 
+
+{% if authors %}
+	{% for author in authors %}
+		{% if author.emails or author.home_pages %}
+			<h6><b>{{ author|get_author_name }}:</b></h6>
+		{% endif %} 
+        {% if author.emails %}
+        	<p>email: {{ author.emails }}</p>
+        {% endif %}
+        {% if author.home_pages %}
+        	<p>home_page: {{ author.home_pages }}</p>
+        {% endif %} 
+	{% endfor %}
+{% endif %} 
