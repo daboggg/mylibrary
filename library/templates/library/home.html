@@ -3,7 +3,7 @@
 {% load library_tags %}
 
 {% block sidebar %}
-    <div class="card z-depth-2 flow-text">
+    <div class="card z-depth-2">
         <div class="pxy-1 teal-text">
             <h6>
                 <span>Всего книг: </span>
@@ -31,7 +31,7 @@
 {% block content %}
     <h5 class="center-align teal-text">Недавно добавленные:</h5>
     {% for book in books %}
-        <div class="flow-text card horizontal row valign-wrapper teal-text z-depth-2">
+        <div class="card horizontal row valign-wrapper teal-text z-depth-2">
             <div class="col s4 l3 card-image waves-effect waves-block waves-light">
                 <img class="activator"
 {#                     src="https://imgholder.ru/768x1024/f44336/fff.jpg&text=Обложка+Для+Книги&font=kelson">#}
