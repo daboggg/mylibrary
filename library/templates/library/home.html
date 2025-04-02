@@ -1,4 +1,5 @@
 {% extends 'sidebar-content.html' %}
+{% load library_tags %}
 {% load static %}
 {% load library_tags %}
 
@@ -14,14 +15,14 @@
                 <h5>Наиболее популярные жанры:</h5>
                 <div class="collection">
                     {% for genre in genres %}
-                        <a href="#!" class="collection-item">
+                        <a href="{% url 'library:home' %}?genre_slug={{ genre.slug }}" class="collection-item">
                             <div class="valign-wrapper" style="display: flex; justify-content: space-between">
                                 <span>{{ genre.genre_rus }}</span>
                                 <span>{{ genre.book_count }}</span>
                             </div>
                         </a>
                     {% endfor %}
-
+    
                 </div>
             {% endif %}
         </div>
@@ -29,7 +30,7 @@
 {% endblock %}
 
 {% block content %}
-    <h5 class="center-align teal-text">Недавно добавленные:</h5>
+    <h5 class="center-align teal-text">{{ content_name }} {{ books|length }} кн.</h5>
     {% for book in books %}
         <div class="card horizontal row valign-wrapper teal-text z-depth-2">
             <div class="col s4 l3 card-image waves-effect waves-block waves-light">

@@ -6,25 +6,42 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
+from django.shortcuts import get_list_or_404, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
 
 from library.book_data_utils import check_book_exists, create_or_get_authors, get_genres, get_annotation, get_sequence, \
     get_keywords, get_binary_img, create_and_get_img
 from library.forms import BookUploadForm
-from library.models import Book
+from library.models import Book, Genre
 from library.parserFB2 import get_soup_from_fb2
 
 log = logging.getLogger(__name__)
 
 
 class HomeView(ListView):
+    content_name = ''
     model = Book
     template_name = 'library/home.html'
     extra_context = {'title': 'Главная страница'}
     context_object_name = 'books'
+    paginate_by = 7
+
+    def get_context_data(self, *args, **kwargs):
+        context =  super().get_context_data(*args, **kwargs)
+        if not self.content_name:
+            context['content_name'] = 'Недавно добавленные:'
+        else:
+            context['content_name'] = self.content_name
+        return context
 
     def get_queryset(self):
+        if self.request.GET:
+            if genre_slug := self.request.GET.get('genre_slug'):
+                genre = get_object_or_404(Genre, slug=genre_slug)
+                self.content_name = f'{genre.genre_rus}'
+                return genre.books.prefetch_related('author').order_by('-created_at')
+
         return Book.objects.prefetch_related('author').order_by('-created_at')[:7]
 
 
