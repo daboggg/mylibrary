@@ -29,7 +29,6 @@
 {% endblock %}
 
 {% block content %}
-
     <ul class="pagination">
 
         <li class="waves-effect"><a style="padding: 0;" href="?{% url_replace request 'page' 1 %}"><i class="material-icons">keyboard_double_arrow_left</i></a></li>
@@ -46,7 +45,7 @@
             {% if page_obj.number == p %}
                 <li class="waves-effect active"><a class="teal" href="?{% url_replace request 'page' p %}">{{ p }}</a>
                 </li>
-            {% elif p != 1 and p != paginator.count  and p <= page_obj.number|add:2 and p >= page_obj.number|add:-2 %}
+            {% elif p <= page_obj.number|add:2 and p >= page_obj.number|add:-2 %}
                 <li class="waves-effect"><a href="?{% url_replace request 'page' p %}">{{ p }}</a></li>
             {% endif %}
 
