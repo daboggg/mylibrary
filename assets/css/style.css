@@ -50,6 +50,15 @@
     margin-bottom: 20px;
 }
 
+.px-0 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.pxy-0 {
+    padding: 0;
+}
+
 .pxy-1 {
     padding: 10px;
 }

@@ -25,7 +25,7 @@ class HomeView(ListView):
     template_name = 'library/home.html'
     extra_context = {'title': 'Главная страница'}
     context_object_name = 'books'
-    paginate_by = 7
+    paginate_by = 1
 
     def get_context_data(self, *args, **kwargs):
         context =  super().get_context_data(*args, **kwargs)
