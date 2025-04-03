@@ -29,42 +29,8 @@
 {% endblock %}
 
 {% block content %}
-    <ul class="pagination">
-
-        <li class="waves-effect"><a style="padding: 0;" href="?{% url_replace request 'page' 1 %}"><i class="material-icons">keyboard_double_arrow_left</i></a></li>
-        {% if not page_obj.has_previous %}
-            <li class="disabled"><a  style="padding: 0;"><i class="material-icons">chevron_left</i></a></li>
-        {% else %}
-            <li class="waves-effect"><a  style="padding: 0;" href="?{% url_replace request 'page' page_obj.previous_page_number %}"><i
-                    class="material-icons">chevron_left</i></a></li>
-        {% endif %}
-
-
-
-        {% for p in paginator.page_range %}
-            {% if page_obj.number == p %}
-                <li class="waves-effect active"><a class="teal" href="?{% url_replace request 'page' p %}">{{ p }}</a>
-                </li>
-            {% elif p <= page_obj.number|add:2 and p >= page_obj.number|add:-2 %}
-                <li class="waves-effect"><a href="?{% url_replace request 'page' p %}">{{ p }}</a></li>
-            {% endif %}
-
-        {% endfor %}
-
-
-
-
-        {% if not page_obj.has_next %}
-            <li class="disabled"><a style="padding: 0;"><i class="material-icons">chevron_right</i></a></li>
-        {% else %}
-            <li class="waves-effect"><a style="padding: 0;" href="?{% url_replace request 'page' page_obj.next_page_number %}"><i
-                    class="material-icons">chevron_right</i></a></li>
-        {% endif %}
-        <li class="waves-effect"><a style="padding: 0;" href="?{% url_replace request 'page' paginator.count %}"><i class="material-icons">keyboard_double_arrow_right</i></a></li>
-    </ul>
-
-
-    <h5 class="center-align teal-text">{{ content_name }} {{ books|length }} кн.</h5>
+    <h5 class="center-align teal-text">{{ content_name }}: {{ paginator.count }} кн.</h5>
+    <div class="center-align mt-3">{% pagination %}</div>
     {% for book in books %}
         <div class="card horizontal row valign-wrapper teal-text z-depth-2">
             <div class="col s4 l3 card-image waves-effect waves-block waves-light">
@@ -88,6 +54,6 @@
             </div>
         </div>
     {% endfor %}
-
+    <div class="center-align">{% pagination %}</div>
 
 {% endblock %}

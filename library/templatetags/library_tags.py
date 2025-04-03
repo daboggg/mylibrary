@@ -49,3 +49,12 @@ def get_author_name(author: Author):
         return author.nickname
     else:
         return 'No author'
+
+@register.inclusion_tag("library/inclusion_tags/pagination.html", takes_context=True)
+def pagination(context):
+    return {
+        'page_obj': context['page_obj'],
+        'paginator': context['paginator'],
+        'request': context['request'],
+
+    }

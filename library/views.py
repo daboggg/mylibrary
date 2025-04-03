@@ -25,12 +25,12 @@ class HomeView(ListView):
     template_name = 'library/home.html'
     extra_context = {'title': 'Главная страница'}
     context_object_name = 'books'
-    paginate_by = 1
+    paginate_by = 2
 
     def get_context_data(self, *args, **kwargs):
         context =  super().get_context_data(*args, **kwargs)
         if not self.content_name:
-            context['content_name'] = 'Недавно добавленные:'
+            context['content_name'] = 'Недавно добавленные'
         else:
             context['content_name'] = self.content_name
         return context
