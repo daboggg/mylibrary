@@ -13,8 +13,9 @@ from django.views.generic import CreateView, ListView
 from library.book_data_utils import check_book_exists, create_or_get_authors, get_genres, get_annotation, get_sequence, \
     get_keywords, get_binary_img, create_and_get_img
 from library.forms import BookUploadForm
-from library.models import Book, Genre
+from library.models import Book, Genre, Author
 from library.parserFB2 import get_soup_from_fb2
+from library.templatetags.library_tags import get_author_name
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ class HomeView(ListView):
     template_name = 'library/home.html'
     extra_context = {'title': 'Главная страница'}
     context_object_name = 'books'
-    paginate_by = 2
+    paginate_by = 1
 
     def get_context_data(self, *args, **kwargs):
         context =  super().get_context_data(*args, **kwargs)
@@ -41,6 +42,10 @@ class HomeView(ListView):
                 genre = get_object_or_404(Genre, slug=genre_slug)
                 self.content_name = f'{genre.genre_rus}'
                 return genre.books.prefetch_related('author').order_by('-created_at')
+            elif author_slug := self.request.GET.get('author_slug'):
+                author = get_object_or_404(Author, slug=author_slug)
+                self.content_name = get_author_name(author)
+                return author.books.prefetch_related('author').order_by('-created_at')
 
         return Book.objects.prefetch_related('author').order_by('-created_at')[:7]
 
@@ -81,7 +86,7 @@ class UploadBook(LoginRequiredMixin, CreateView):
                 form.instance.genres.set(get_genres(title_info))
                 form.instance.book_title = title_info.get('book-title')
                 form.instance.annotation = get_annotation(soup)
-                form.instance.keywords = get_keywords(soup)
+                form.instance.tags.set(get_keywords(soup))
                 form.instance.sequence = get_sequence(title_info)
 
                 # если изображение есть, добавляем его в форму

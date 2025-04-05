@@ -6,7 +6,7 @@
     </div>
     <div class="col">
         {% for author in authors %}
-        <p>{{ author|get_author_name }}</p>
+        <p><a class="teal-text" href="{% url 'library:home' %}?author_slug={{ author.slug }}">{{ author|get_author_name }}</a></p>
         {% endfor %}
     </div>
 </div>
@@ -24,14 +24,14 @@
     </div>
 {% endif %} 
 
-{% if keywords %}
+{% if tags %}
     <div class="row">
         <div class="col">
             <p class="mr-1"><b>В книге есть:</b></p>
         </div>
         <div class="col">
-            {% for keyword in keywords %}
-            	<p>{{ keyword }}</p>
+            {% for tag in tags %}
+            	<p>{{ tag }}</p>
             {% endfor %}
         </div>
     </div>

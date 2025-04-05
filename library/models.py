@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.urls import reverse
+from taggit.managers import TaggableManager
 
 from library.model_utils import unique_slugify
 
@@ -14,7 +14,7 @@ class Book(models.Model):
     book_title = models.CharField(max_length=100)
     slug = models.CharField( max_length=255, unique=True)
     annotation = models.TextField(blank=True, null=True)
-    keywords = models.CharField(max_length=300, blank=True, null=True)
+    tags = TaggableManager(blank=True, related_name='books')
     sequence = models.CharField(max_length=100, blank=True, null=True)
     book_file = models.FileField(upload_to='books/')
     coverpage = models.ImageField(upload_to='coverpages/', null=True, blank=True)
@@ -35,6 +35,12 @@ class Book(models.Model):
         if not self.slug:
             self.slug = unique_slugify(self, self.book_title)
         super().save(*args, **kwargs)
+
+
+# class Sequence(models.Model):
+#     name = models.CharField(max_length=100)
+#     number = models.PositiveIntegerField()
+#     slug = models.CharField( max_length=100, unique=True)
 
 
 class Author(models.Model):

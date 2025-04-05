@@ -10,7 +10,7 @@ def get_book_card_avers(book: Book):
     return {
         'authors': book.author.all(),
         'sequence': book.sequence.split(',') if book.sequence else [],
-        'keywords': book.keywords.split(',') if book.keywords else [],
+        'tags': book.tags.all()
     }
 
 @register.inclusion_tag("library/inclusion_tags/book_card_revers.html")
@@ -19,6 +19,15 @@ def get_book_card_reverse(book: Book):
         'annotation': book.annotation,
         'book_title': book.book_title,
         'authors': book.author.all(),
+    }
+
+@register.inclusion_tag("library/inclusion_tags/pagination.html", takes_context=True)
+def pagination(context):
+    return {
+        'page_obj': context['page_obj'],
+        'paginator': context['paginator'],
+        'request': context['request'],
+
     }
 
 @register.simple_tag
@@ -50,11 +59,3 @@ def get_author_name(author: Author):
     else:
         return 'No author'
 
-@register.inclusion_tag("library/inclusion_tags/pagination.html", takes_context=True)
-def pagination(context):
-    return {
-        'page_obj': context['page_obj'],
-        'paginator': context['paginator'],
-        'request': context['request'],
-
-    }

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'library.apps.LibraryConfig',
     'debug_toolbar',
+    'taggit',
 ]
 
 MIDDLEWARE = [

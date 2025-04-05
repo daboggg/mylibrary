@@ -181,15 +181,15 @@ def get_sequence(title_info: dict) -> str | None:
     return ', '.join(result)
 
 
-def get_keywords(soup: BeautifulSoup) -> str | None:
+def get_keywords(soup: BeautifulSoup) -> list[str] | None:
     """
     возвращает строку с ключевыми словами
     """
-    annotation = soup.find('title-info').find('keywords')
-    if annotation:
-        return annotation.text
+    keywords = soup.find('title-info').find('keywords')
+    if keywords:
+        return keywords.text.split(',')
     else:
-        return annotation
+        return []
 
 
 def get_binary_img(soup: BeautifulSoup) -> str | None:
