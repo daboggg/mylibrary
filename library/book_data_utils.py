@@ -4,7 +4,7 @@ import xmltodict
 from bs4 import BeautifulSoup
 
 from library.kandinsky import get_image_from_kandinsky
-from library.models import Author, Genre
+from library.models import Author, Genre, Sequence
 
 log = logging.getLogger(__name__)
 
@@ -160,25 +160,22 @@ def get_annotation(soup: BeautifulSoup) -> str | None:
         return annotation
 
 
-def get_sequence(title_info: dict) -> str | None:
+def get_sequence(title_info: dict) -> list[Sequence] | list:
     """
     если книга входит в серию или в серии,
-     возвращает строку с названиями серий через запятую
+     возвращает объект Sequence, если нет - пустой список
     """
     sequence = title_info.get('sequence')
     if not sequence:
-        return sequence
+        return []
     if isinstance(sequence, dict):
         sequence = [sequence]
 
     result = []
     for s in sequence:
-        if s.get('@number'):
-            result.append(f'{s.get("@name")}: {s.get("@number")}')
-        else:
-            result.append(s.get('@name'))
-
-    return ', '.join(result)
+        seq, _ =Sequence.objects.get_or_create(name=s.get("@name"), number=s.get("@number"))
+        result.append(seq)
+    return result
 
 
 def get_keywords(soup: BeautifulSoup) -> list[str] | None:

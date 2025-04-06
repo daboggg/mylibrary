@@ -17,8 +17,8 @@
             <p class="mr-1"><b>Серия:</b></p>
         </div>
         <div class="col">
-            {% for item in sequence %}
-            	<p>{{ item }}</p>
+            {% for seq in sequence %}
+            	<p>{{ seq.name }}{% if seq.number %}: {{ seq.number }}{% endif %}</p>
             {% endfor %}
         </div>
     </div>

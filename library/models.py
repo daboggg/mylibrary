@@ -15,7 +15,7 @@ class Book(models.Model):
     slug = models.CharField( max_length=255, unique=True)
     annotation = models.TextField(blank=True, null=True)
     tags = TaggableManager(blank=True, related_name='books')
-    sequence = models.CharField(max_length=100, blank=True, null=True)
+    sequence = models.ManyToManyField('Sequence', blank=True, related_name='books')
     book_file = models.FileField(upload_to='books/')
     coverpage = models.ImageField(upload_to='coverpages/', null=True, blank=True)
 
@@ -37,10 +37,27 @@ class Book(models.Model):
         super().save(*args, **kwargs)
 
 
-# class Sequence(models.Model):
-#     name = models.CharField(max_length=100)
-#     number = models.PositiveIntegerField()
-#     slug = models.CharField( max_length=100, unique=True)
+class Sequence(models.Model):
+    name = models.CharField(max_length=100)
+    number = models.PositiveIntegerField(null=True, blank=True)
+    slug = models.CharField( max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_slugify(self, self.name)
+        super().save(*args, **kwargs)
+
+
+# class NumberOfSequence(models.Model):
+#     number = models.PositiveIntegerField(blank=True, null=True)
+#     sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='numbers')
+#
+#     def __str__(self):
+#         return self.number
+
 
 
 class Author(models.Model):

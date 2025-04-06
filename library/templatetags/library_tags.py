@@ -9,7 +9,7 @@ register = template.Library()
 def get_book_card_avers(book: Book):
     return {
         'authors': book.author.all(),
-        'sequence': book.sequence.split(',') if book.sequence else [],
+        'sequence': book.sequence.all(),
         'tags': book.tags.all()
     }
 

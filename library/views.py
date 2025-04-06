@@ -87,8 +87,7 @@ class UploadBook(LoginRequiredMixin, CreateView):
                 form.instance.book_title = title_info.get('book-title')
                 form.instance.annotation = get_annotation(soup)
                 form.instance.tags.set(get_keywords(soup))
-                form.instance.sequence = get_sequence(title_info)
-
+                form.instance.sequence.set(get_sequence(title_info))
                 # если изображение есть, добавляем его в форму
                 if binary_img:=get_binary_img(soup):
                     form.instance.coverpage = ContentFile(

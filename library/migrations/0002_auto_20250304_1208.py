@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.db import migrations, models
 from pytils.translit import slugify
 
@@ -10,7 +11,9 @@ def save_genres(apps, schema_editor):
             genre_short, genre_rus = item.split('%')
             g_model(genre_short=genre_short.strip(), genre_rus=genre_rus.strip(), slug=slugify(genre_rus.strip())).save()
 
-
+def add_user1(apps, schema_editor):
+    model = apps.get_model('users', 'User')
+    model.objects.create(username='user1', email='daboggg@ya.ru', password=make_password('As144911'))
 
 class Migration(migrations.Migration):
 
@@ -20,4 +23,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(save_genres),
+        migrations.RunPython(add_user1),
     ]
