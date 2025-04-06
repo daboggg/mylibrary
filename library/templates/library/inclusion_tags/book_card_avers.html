@@ -18,7 +18,7 @@
         </div>
         <div class="col">
             {% for seq in sequence %}
-            	<p>{{ seq.name }}{% if seq.number %}: {{ seq.number }}{% endif %}</p>
+                <p><a class="teal-text" href="{% url 'library:home' %}?sequence_name={{ seq.lat_name }}">{{ seq.name }}{% if seq.number %}: {{ seq.number }}{% endif %}</a></p>
             {% endfor %}
         </div>
     </div>

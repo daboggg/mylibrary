@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from pytils.translit import slugify
 from taggit.managers import TaggableManager
 
 from library.model_utils import unique_slugify
@@ -40,14 +41,12 @@ class Book(models.Model):
 class Sequence(models.Model):
     name = models.CharField(max_length=100)
     number = models.PositiveIntegerField(null=True, blank=True)
-    slug = models.CharField( max_length=100, unique=True)
-
+    lat_name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = unique_slugify(self, self.name)
+        self.lat_name = slugify(self.name)
         super().save(*args, **kwargs)
 
 
