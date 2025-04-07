@@ -1,14 +1,18 @@
 import base64
 import logging
+from uuid import uuid4
 
 import xmltodict
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, ListView
+from pytils.translit import slugify
 
 from library.book_data_utils import check_book_exists, create_or_get_authors, get_genres, get_annotation, get_sequence, \
     get_keywords, get_binary_img, create_and_get_img
@@ -18,6 +22,14 @@ from library.parserFB2 import get_soup_from_fb2
 from library.templatetags.library_tags import get_author_name
 
 log = logging.getLogger(__name__)
+
+
+class DownloadBook(LoginRequiredMixin, View):
+    def get(self, request, book_slug):
+        # file_path = get_object_or_404(Book, slug=book_slug).book_file.path
+        book = get_object_or_404(Book, slug=book_slug)
+        file_path = book.book_file.path
+        return FileResponse(open(file_path, 'rb'), as_attachment=True,filename=f'{slugify(book.book_title)}.fb2', content_type="application/x-fictionbook+xml")
 
 
 class HomeView(ListView):
@@ -94,6 +106,8 @@ class UploadBook(LoginRequiredMixin, CreateView):
                 form.instance.annotation = get_annotation(soup)
                 form.instance.tags.set(get_keywords(soup))
                 form.instance.sequence.set(get_sequence(title_info))
+                form.instance.book_file.name = uuid4().hex[:16]
+
                 # если изображение есть, добавляем его в форму
                 if binary_img:=get_binary_img(soup):
                     form.instance.coverpage = ContentFile(
