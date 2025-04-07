@@ -31,7 +31,7 @@
         </div>
         <div class="col">
             {% for tag in tags %}
-            	<p>{{ tag }}</p>
+            	<p><a class="teal-text" href="{% url 'library:home' %}?tag_name={{ tag.name }}">{{ tag.name }}</a></p>
             {% endfor %}
         </div>
     </div>

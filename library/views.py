@@ -48,7 +48,11 @@ class HomeView(ListView):
                 return author.books.prefetch_related('author').order_by('-created_at')
             elif sequence_name := self.request.GET.get('sequence_name'):
                 self.content_name = sequence_name
-                return Book.objects.filter(sequence__lat_name=sequence_name).order_by('sequence__number')
+                return Book.objects.prefetch_related('author').filter(sequence__lat_name=sequence_name).order_by('sequence__number')
+            elif tag_name := self.request.GET.get('tag_name'):
+                self.content_name = tag_name
+                return Book.objects.prefetch_related('author').filter(tags__name=tag_name).order_by('-created_at')
+
         return Book.objects.prefetch_related('author').order_by('-created_at')[:7]
 
 
