@@ -184,7 +184,7 @@ def get_keywords(soup: BeautifulSoup) -> list[str] | None:
     """
     keywords = soup.find('title-info').find('keywords')
     if keywords:
-        return keywords.text.split(',')
+        return [keyword.strip() for keyword in keywords.text.split(',')]
     else:
         return []
 

@@ -2,6 +2,8 @@
 {% load library_tags %}
 {% load static %}
 
+{% block title %}{{ title|capfirst }}{% endblock %}
+
 {% block sidebar %}
     <div class="card z-depth-2">
         <div class="pxy-1 teal-text">
@@ -29,7 +31,7 @@
 {% endblock %}
 
 {% block content %}
-    <h5 class="center-align teal-text">{{ content_name }}: {{ paginator.count }} кн.</h5>
+    <h5 class="center-align teal-text">{{ content_name|capfirst }}: {{ paginator.count }} кн.</h5>
     <div class="center-align mt-3">{% pagination %}</div>
     {% for book in books %}
         <div class="card horizontal row valign-wrapper teal-text z-depth-2">

@@ -17,7 +17,7 @@ from pytils.translit import slugify
 from library.book_data_utils import check_book_exists, create_or_get_authors, get_genres, get_annotation, get_sequence, \
     get_keywords, get_binary_img, create_and_get_img
 from library.forms import BookUploadForm
-from library.models import Book, Genre, Author
+from library.models import Book, Genre, Author, Sequence
 from library.parserFB2 import get_soup_from_fb2
 from library.templatetags.library_tags import get_author_name
 
@@ -36,7 +36,6 @@ class HomeView(ListView):
     content_name = ''
     model = Book
     template_name = 'library/home.html'
-    extra_context = {'title': 'Главная страница'}
     context_object_name = 'books'
     paginate_by = 1
 
@@ -44,8 +43,10 @@ class HomeView(ListView):
         context =  super().get_context_data(*args, **kwargs)
         if not self.content_name:
             context['content_name'] = 'Недавно добавленные'
+            context['title'] = 'Главная страница'
         else:
             context['content_name'] = self.content_name
+            context['title'] = self.content_name
         return context
 
     def get_queryset(self):
@@ -58,9 +59,9 @@ class HomeView(ListView):
                 author = get_object_or_404(Author, slug=author_slug)
                 self.content_name = get_author_name(author)
                 return author.books.prefetch_related('author').order_by('-created_at')
-            elif sequence_name := self.request.GET.get('sequence_name'):
-                self.content_name = sequence_name
-                return Book.objects.prefetch_related('author').filter(sequence__lat_name=sequence_name).order_by('sequence__number')
+            elif sequence_lat_name := self.request.GET.get('sequence_lat_name'):
+                self.content_name = Sequence.objects.filter(lat_name=sequence_lat_name).first().name
+                return Book.objects.prefetch_related('author').filter(sequence__lat_name=sequence_lat_name).distinct().order_by('sequence__number')
             elif tag_name := self.request.GET.get('tag_name'):
                 self.content_name = tag_name
                 return Book.objects.prefetch_related('author').filter(tags__name=tag_name).order_by('-created_at')
