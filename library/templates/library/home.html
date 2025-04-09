@@ -7,6 +7,16 @@
 {% block sidebar %}
     <div class="card z-depth-2">
         <div class="pxy-1 teal-text">
+            <form method="get" class="row">
+                <div class=" col s12">
+                    <input placeholder="Поиск" name="q" id="search" type="text">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card z-depth-2">
+        <div class="pxy-1 teal-text">
             <h6>
                 <span>Всего книг: </span>
                 <span class="new badge" data-badge-caption="">{% get_total_books %}</span>
@@ -37,15 +47,15 @@
         <div class="card horizontal row valign-wrapper teal-text z-depth-2">
             <div class="col s4 l3 card-image waves-effect waves-block waves-light">
                 <img class="activator"
-{#                                             src="https://imgholder.ru/768x1024/f44336/fff.jpg&text=Обложка+Для+Книги&font=kelson">#}
+                        {#                                             src="https://imgholder.ru/768x1024/f44336/fff.jpg&text=Обложка+Для+Книги&font=kelson">#}
                      src="{{ book.coverpage.url }}">
             </div>
             <div class="col s8 l9 card-content">
                 <span class="card-title">
                     {{ book.book_title }}
                     {% if user.is_authenticated %}
-                    	<a class="teal-text" href="{% url 'library:download_book' book.slug %}"><i
-                        class="material-icons right">download</i></a>
+                        <a class="teal-text" href="{% url 'library:download_book' book.slug %}"><i
+                                class="material-icons right">download</i></a>
                     {% endif %} 
                 </span>
                 {% get_book_card_avers book %}

@@ -62,7 +62,6 @@
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
             {% if user.is_authenticated %}
-                <li><a href="sass.html">Sass</a></li>
                 <li><a href="badges.html">Components</a></li>
                 <li><a href="collapsible.html">Javascript</a></li>
                 <li><a href="{% url 'library:upload_book' %}">Добавить книгу</a></li>
@@ -94,7 +93,7 @@
 
 
 {% block main %}
-	
+
 {% endblock %}
 
 

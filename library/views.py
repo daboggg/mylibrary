@@ -4,6 +4,7 @@ from uuid import uuid4
 
 import xmltodict
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
@@ -65,6 +66,24 @@ class HomeView(ListView):
             elif tag_name := self.request.GET.get('tag_name'):
                 self.content_name = tag_name
                 return Book.objects.prefetch_related('author').filter(tags__name=tag_name).order_by('-created_at')
+            elif q := self.request.GET.get('q'):
+                self.content_name = f'Поиск по "{q}"'
+                vector = SearchVector(
+                    'genres__genre_rus',
+                    'author__first_name',
+                    'author__middle_name',
+                    'author__last_name',
+                    'author__nickname',
+                    'book_title',
+                    'annotation',
+                    'tags__name',
+                    'sequence__name',
+                )
+                query = SearchQuery(q)
+                books = (Book.objects.prefetch_related('author').annotate(rank=SearchRank(vector, query))
+                        .filter(rank__gt=0).order_by('-rank'))
+
+                return list({book.id: book for book in books}.values())
 
         return Book.objects.prefetch_related('author').order_by('-created_at')[:7]
 
