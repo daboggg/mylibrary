@@ -22,6 +22,10 @@
     margin-right: 10px;
 }
 
+.mr-10 {
+    margin-right: 100px;
+}
+
 .mt-0 {
     margin-top: 0;
 }
@@ -48,6 +52,9 @@
 
 .mb-2 {
     margin-bottom: 20px;
+}
+.mb-10 {
+    margin-bottom: 100px;
 }
 
 .px-0 {

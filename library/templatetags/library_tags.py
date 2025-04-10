@@ -45,6 +45,13 @@ def get_genres(arg=None):
         return Genre.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')
 
 @register.simple_tag
+def get_authors(arg=None):
+    if arg == 'most_popular':
+        return Author.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')[:5]
+    else:
+        return Author.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')
+
+@register.simple_tag
 def get_total_books():
     return Book.objects.count()
 
@@ -59,4 +66,8 @@ def get_author_name(author: Author):
         return author.nickname
     else:
         return 'No author'
+
+@register.simple_tag
+def get_alphabet_for_search_author():
+    return "АБВГДЕЁЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ"
 

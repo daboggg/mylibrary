@@ -8,6 +8,7 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
+from django.db.models import Count
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -25,12 +26,14 @@ from library.templatetags.library_tags import get_author_name
 log = logging.getLogger(__name__)
 
 
-class DownloadBook(LoginRequiredMixin, View):
-    def get(self, request, book_slug):
-        # file_path = get_object_or_404(Book, slug=book_slug).book_file.path
-        book = get_object_or_404(Book, slug=book_slug)
-        file_path = book.book_file.path
-        return FileResponse(open(file_path, 'rb'), as_attachment=True,filename=f'{slugify(book.book_title)}.fb2', content_type="application/x-fictionbook+xml")
+class AuthorsView(ListView):
+    model = Author
+    template_name = 'library/authors.html'
+    # context_object_name = 'authors'
+    extra_context = {'title': 'Авторы'}
+
+    # def get_queryset(self):
+    #     return Author.objects.annotate(book_count=Count('books')).order_by('-book_count')
 
 
 class HomeView(ListView):
@@ -86,6 +89,14 @@ class HomeView(ListView):
                 return list({book.id: book for book in books}.values())
 
         return Book.objects.prefetch_related('author').order_by('-created_at')[:7]
+
+
+class DownloadBook(LoginRequiredMixin, View):
+    def get(self, request, book_slug):
+        # file_path = get_object_or_404(Book, slug=book_slug).book_file.path
+        book = get_object_or_404(Book, slug=book_slug)
+        file_path = book.book_file.path
+        return FileResponse(open(file_path, 'rb'), as_attachment=True,filename=f'{slugify(book.book_title)}.fb2', content_type="application/x-fictionbook+xml")
 
 
 class UploadBook(LoginRequiredMixin, CreateView):
