@@ -10,7 +10,8 @@ def get_book_card_avers(book: Book):
     return {
         'authors': book.author.all(),
         'sequence': book.sequence.all(),
-        'tags': book.tags.all()
+        'tags': book.tags.all(),
+        'genres': book.genres.all(),
     }
 
 @register.inclusion_tag("library/inclusion_tags/book_card_revers.html")
