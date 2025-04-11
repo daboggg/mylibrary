@@ -8,7 +8,7 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -29,11 +29,21 @@ log = logging.getLogger(__name__)
 class AuthorsView(ListView):
     model = Author
     template_name = 'library/authors.html'
-    # context_object_name = 'authors'
+    context_object_name = 'authors'
     extra_context = {'title': 'Авторы'}
+    paginate_by = 1
 
-    # def get_queryset(self):
-    #     return Author.objects.annotate(book_count=Count('books')).order_by('-book_count')
+    def get_queryset(self):
+        if letter := self.request.GET.get('letter'):
+            self.extra_context['query'] = letter
+            return Author.objects.filter(Q(last_name__istartswith=letter) | Q(nickname__istartswith=letter))
+        elif q := self.request.GET.get('q'):
+            self.extra_context['query'] = q
+            vector = SearchVector('last_name','first_name', 'nickname')
+            query = SearchQuery(q)
+            return Author.objects.annotate(search=vector).filter(search=query)
+        self.extra_context['query'] = ''
+        return []
 
 
 class HomeView(ListView):

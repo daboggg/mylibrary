@@ -6,12 +6,12 @@
 {% endblock %}
 
 {% block sidebar %}
-
+    {# поиск#}
     <div class="card z-depth-2">
         <div class="pxy-1 teal-text">
             <form method="get" class="row">
                 <div class=" col s12">
-                    <input placeholder="Поиск" name="q" id="search" type="text">
+                    <input placeholder="Поиск по автору" name="q" id="search" type="text">
                 </div>
             </form>
         </div>
@@ -21,8 +21,8 @@
         <div class="pxy-1 teal-text">
             <h5>Наиболее популярные авторы:</h5>
             <div class="collection">
-                {% get_authors 'most_popular' as authors %}
-                {% for author in authors %}
+                {% get_authors 'most_popular' as most_popular_authors %}
+                {% for author in most_popular_authors %}
                     <a href="#" class="collection-item">
                         <div class="valign-wrapper" style="display: flex; justify-content: space-between">
                             <span>{{ author|get_author_name }}</span>
@@ -40,12 +40,35 @@
         {% get_alphabet_for_search_author as alphabet %}
         <h6 class="row pxy-1">
             {% for letter in  alphabet %}
-                <a href="#"><span class="mt-1 col s1 pxy-1 teal-text">{{ letter }}</span></a>
+                <a href="{% url 'library:authors' %}?letter={{ letter }}"><span
+                        class="mt-1 col s1 pxy-1 teal-text">{{ letter }}</span></a>
             {% endfor %}
         </h6>
-
-
     </div>
+    
+    
+    {% if query %}
+    	<div class="card z-depth-2">
+        <div class="pxy-1 teal-text">
+            <div class="center-align">{% pagination %}</div>
+            <h5><b>Поиск по</b>: <i>"{{ query }}"</i></h5>
+            <div class="collection">
+                {% for author in authors %}
+                    <a href="#" class="collection-item"><h6>{{ author|get_author_name }}</h6>
+{#                        <div class="valign-wrapper" style="display: flex; justify-content: space-between">#}
+{#                            <span>{{ author|get_author_name }}</span>#}
+{#                            <span>{{ author.book_count }}</span>#}
+{#                        </div>#}
+                    </a>
+                {% empty %}
+                    <h6 class="collection-item">Ничего не найдено</h6>
+                {% endfor %}
+            </div>
+            <div class="center-align">{% pagination %}</div>
+        </div>
+    </div>
+    {% endif %} 
+    
     {#    <h5 class="center-align teal-text">{{ content_name|capfirst }}: {{ paginator.count }} кн.</h5>#}
     {#    {% for book in books %}#}
     {#        <div class="card horizontal row valign-wrapper teal-text z-depth-2">#}

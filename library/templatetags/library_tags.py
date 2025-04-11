@@ -57,11 +57,12 @@ def get_total_books():
 
 @register.filter
 def get_author_name(author: Author):
+    nickname = f'({author.nickname})' if author.nickname else ''
     if author.first_name and author.last_name:
         if author.middle_name:
-            return f'{author.first_name} {author.middle_name} {author.last_name}'
+            return f'{author.last_name} {author.first_name} {author.middle_name} {nickname}'
         else:
-            return f'{author.first_name} {author.last_name}'
+            return f'{author.last_name} {author.first_name} {nickname}'
     elif author.nickname:
         return author.nickname
     else:
