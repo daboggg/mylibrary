@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse
 from pytils.translit import slugify
 from taggit.managers import TaggableManager
 
@@ -50,15 +51,6 @@ class Sequence(models.Model):
         super().save(*args, **kwargs)
 
 
-# class NumberOfSequence(models.Model):
-#     number = models.PositiveIntegerField(blank=True, null=True)
-#     sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='numbers')
-#
-#     def __str__(self):
-#         return self.number
-
-
-
 class Author(models.Model):
     first_name = models.CharField(max_length=50, blank=True, null=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
@@ -71,8 +63,8 @@ class Author(models.Model):
     def __str__(self):
         return f'{self.pk} {self.first_name} {self.last_name} {self.middle_name}'
 
-    # def get_absolute_url(self):
-    #     return reverse('articles_detail', kwargs={'slug': self.slug})
+    def get_absolute_url(self):
+        return reverse('library:author', kwargs={'author_slug': self.slug})
 
     def save(self, *args, **kwargs):
         if self.first_name and self.middle_name and self.last_name:

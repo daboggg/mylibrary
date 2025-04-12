@@ -8,12 +8,12 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 from pytils.translit import slugify
 
 from library.book_data_utils import check_book_exists, create_or_get_authors, get_genres, get_annotation, get_sequence, \
@@ -24,6 +24,26 @@ from library.parserFB2 import get_soup_from_fb2
 from library.templatetags.library_tags import get_author_name
 
 log = logging.getLogger(__name__)
+
+
+class AuthorView(DetailView):
+    model = Author
+    template_name = 'library/author_detail.html'
+    slug_url_kwarg = 'author_slug'
+    context_object_name = 'author'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        books = self.object.books.all().prefetch_related('genres')
+        book_data= {}
+        for book in books:
+            for g in book.genres.all():
+                if not g.genre_rus in book_data:
+                    book_data[g] = [book]
+                else:
+                    book_data[g].append(book)
+        context['book_data'] = book_data
+        return context
 
 
 class AuthorsView(ListView):
