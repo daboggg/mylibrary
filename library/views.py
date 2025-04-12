@@ -38,7 +38,7 @@ class AuthorView(DetailView):
         book_data= {}
         for book in books:
             for g in book.genres.all():
-                if not g.genre_rus in book_data:
+                if not g in book_data:
                     book_data[g] = [book]
                 else:
                     book_data[g].append(book)
