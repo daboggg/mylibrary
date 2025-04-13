@@ -9,22 +9,67 @@
     <div class="container mt-4 teal-text">
         <div class="card z-depth-2 pxy-1">
             <h4 class="center-align">{{ author|get_author_name }}</h4>
-            {{ book_data }}
+            <h5 class="center-align">Жанры:</h5>
             {% if book_data %}
-                <div class="row">
-                    <div class="col s2">
-                        <p class="mr-1"><b>Жанр:</b></p>
-                    </div>
-                    <div class="col s10">
-                        <ul class="collapsible popout">
-                            {% for genre, book in book_data.items %}
-                                <li>
-                                    <div class="collapsible-header">{{ genre.genre_rus }}</div>
-                                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+                <div class="">
+                    <ul class="collapsible popout">
+                        {% for genre, books in book_data.items %}
+                            <li>
+                                <div class="collapsible-header teal lighten-2 white-text">{{ genre.genre_rus }}</div>
+                                <div class="collapsible-body">
+                                    <div class="collection">
+                                        {% for book in books %}
+                                            <div class="row">
+                                                <div class="col s2">
+                                                    <img class="responsive-img" src="{{ book.coverpage.url }}">
+                                                </div>
+                                                <div class="col s9">
+                                                    <a href="#" class="collection-item">
+                                                        <b>{{ book.book_title }}</b>
+                                                        {% if book.sequence.all %}
+                                                            <div>
+                                                                <i>
+                                                                    <b>серия:</b>
+                                                                    {% for sequence in book.sequence.all %}
+                                                                        {% if forloop.counter > 1 %}
+                                                                            ,
+                                                                        {% endif %}
+                                                                        {{ sequence.name }}{% if sequence.number %}:
+                                                                            {{ sequence.number }}{% endif %}
+                                                                    {% endfor %}
+                                                                </i>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if book.tags.all %}
+                                                            <div>
+                                                                <i>
+                                                                    <b>в книге есть: </b>
+                                                                    {% for tag in book.tags.all %}
+                                                                        {% if forloop.counter > 1 %}
+                                                                            ,
+                                                                        {% endif %}
+                                                                        {{ tag.name }}
+                                                                    {% endfor %}
+                                                                </i>
+                                                            </div>
+                                                        {% endif %}
+
+                                                    </a>
+
+                                                </div>
+                                                <div class="col s1">
+                                                    {% if user.is_authenticated %}
+                                                        <a class="teal-text" href="{% url 'library:download_book' book.slug %}"><i
+                                                                class="material-icons right">download</i></a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             {% endif %}
         </div>

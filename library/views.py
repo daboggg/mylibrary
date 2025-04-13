@@ -34,7 +34,7 @@ class AuthorView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        books = self.object.books.all().prefetch_related('genres')
+        books = self.object.books.all().prefetch_related('genres', 'sequence', 'tags')
         book_data= {}
         for book in books:
             for g in book.genres.all():
