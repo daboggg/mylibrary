@@ -9,5 +9,6 @@ urlpatterns = [
     path('download-book/<slug:book_slug>/', views.DownloadBook.as_view(), name='download_book'),
     path('authors/', views.AuthorsView.as_view(), name='authors'),
     path('author/<slug:author_slug>/', views.AuthorView.as_view(), name='author'),
+    path('book/<slug:book_slug>/', views.BookView.as_view(), name='book'),
     path('', views.HomeView.as_view(), name='home'),
 ]

@@ -1,0 +1,115 @@
+{% extends 'content.html' %}
+{% load library_tags %}
+
+{% block title %}
+    {{ book.book_title }}
+{% endblock %}
+
+{% block content %}
+    <div class="card horizontal row valign-wrapper teal-text z-depth-2 mx-1">
+        <div class="col s4 l3 card-image">
+            {#                <a href="{{ book.get_absolute_url }}">#}
+            {#                    <img src="{{ book.coverpage.url }}">#}
+            {#                </a>#}
+
+            <img class="materialboxed" src="{{ book.coverpage.url }}">
+
+        </div>
+        <div class="col s8 l9 card-stacked">
+            <div class="card-content">
+                <h4 class="center-align">
+                    {{ book.book_title }}
+                    {% if user.is_authenticated %}
+                        <a class="teal-text" href="{% url 'library:download_book' book.slug %}"><i
+                                class="material-icons right">download</i></a>
+                    {% endif %} 
+                </h4>
+
+                <div class="row">
+                    <div class="col">
+                        <p class="mr-1"><b>Автор:</b></p>
+                    </div>
+                    <div class="col">
+                        {% for author in book.author.all %}
+                            <p><a class="teal-text"
+{#                                  href="{% url 'library:home' %}?author_slug={{ author.slug }}">{{ author|get_author_name }}</a>#}
+                                  href="{{ author.get_absolute_url }}">{{ author|get_author_name }}</a>
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% if book.genres.all %}
+                    <div class="row">
+                        <div class="col">
+                            <p class="mr-1"><b>Жанр:</b></p>
+                        </div>
+                        <div class="col">
+                            {% for genre in book.genres.all %}
+                                <p><a class="teal-text"
+                                      href="{% url 'library:home' %}?genre_slug={{ genre.slug }}">{{ genre.genre_rus }}</a>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if book.sequence.all %}
+                    <div class="row">
+                        <div class="col">
+                            <p class="mr-1"><b>Серия:</b></p>
+                        </div>
+                        <div class="col">
+                            {% for seq in book.sequence.all %}
+                                <p><a class="teal-text"
+                                      href="{% url 'library:home' %}?sequence_lat_name={{ seq.lat_name }}">
+                                    {{ seq.name }}{% if seq.number %}: {{ seq.number }}{% endif %}</a></p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+
+                {% if book.tags.all %}
+                    <div class="row">
+                        <div class="col">
+                            <p class="mr-1"><b>В книге есть:</b></p>
+                        </div>
+                        <div class="col">
+                            {% for tag in book.tags.all %}
+                                <p><a class="teal-text"
+                                      href="{% url 'library:home' %}?tag_name={{ tag.name }}">{{ tag.name }}</a></p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if book.annotation %}
+                    <h6><b>Аннотация к книге:</b></h6>
+                    <p>{{ book.annotation }}</p>
+                {% endif %}
+
+
+                {% if book.author.all %}
+                    {% for author in book.author.all %}
+                        {% if author.emails or author.home_pages %}
+                            <h6><b>{{ author|get_author_name }}:</b></h6>
+                        {% endif %}
+                        {% if author.emails %}
+                            <p>email: {{ author.emails }}</p>
+                        {% endif %}
+                        {% if author.home_pages %}
+                            <p>home_page: {{ author.home_pages }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

@@ -24,6 +24,9 @@ class Book(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_absolute_url(self):
+        return reverse('library:book', kwargs={'book_slug': self.slug})
+
     def __str__(self):
         return self.book_title
 

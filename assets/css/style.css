@@ -1,3 +1,13 @@
+.mx-1 {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.mx-2 {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
 .ml-0 {
     margin-left: 0;
 }
@@ -60,6 +70,11 @@
 .px-0 {
     padding-left: 0;
     padding-right: 0;
+}
+
+.px-1 {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .pxy-0 {

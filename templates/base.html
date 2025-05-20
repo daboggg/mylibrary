@@ -77,8 +77,8 @@
 </nav>
 
 <ul class="sidenav" id="mobile-demo">
-<li>    <a href="#">Жанры</a></li>
-        <li><a href="{% url 'library:authors' %}">Авторы</a></li>
+    <li><a href="#">Жанры</a></li>
+    <li><a href="{% url 'library:authors' %}">Авторы</a></li>
     {% if user.is_authenticated %}
         <li><a href="{% url 'library:upload_book' %}">Добавить книгу</a></li>
         <li><a class="dropdown-trigger-sidebar" href="#!" data-target="dropdown2"><i class="material-icons">account_circle</i>{{ user.username }}
@@ -110,6 +110,7 @@
             coverTrigger: false,
             constrainWidth: false,
         })
+        M.Materialbox.init(document.querySelectorAll('.materialboxed'))
     });
 </script>
 </body>

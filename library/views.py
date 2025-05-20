@@ -25,6 +25,15 @@ from library.templatetags.library_tags import get_author_name
 
 log = logging.getLogger(__name__)
 
+class BookView(DetailView):
+    model = Book
+    template_name = 'library/book_detail.html'
+    slug_url_kwarg = 'book_slug'
+    context_object_name = 'book'
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('author', 'genres', 'sequence', 'tags')
+
 
 class AuthorView(DetailView):
     model = Author
