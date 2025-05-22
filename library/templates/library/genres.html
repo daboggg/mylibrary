@@ -1,0 +1,55 @@
+{% extends 'sidebar-content.html' %}
+{% load library_tags %}
+{% load static %}
+
+{% block title %}{{ title|capfirst }}{% endblock %}
+
+{% block sidebar %}
+    {#    <div class="card z-depth-2">#}
+    {#        <div class="pxy-1 teal-text">#}
+    {#            <form method="get" class="row">#}
+    {#                <div class=" col s12">#}
+    {#                    <input placeholder="Поиск" name="q" id="search" type="text">#}
+    {#                </div>#}
+    {#            </form>#}
+    {#        </div>#}
+    {#    </div>#}
+
+    <div class="card z-depth-2">
+        <div class="pxy-1 teal-text">
+            <h6>
+                <span>Всего книг: </span>
+                <span class="new badge" data-badge-caption="">{% get_total_books %}</span>
+            </h6>
+            {% get_genres 'most_popular' as genres %}
+            {% if genres %}
+                <h5>Наиболее популярные жанры:</h5>
+                <div class="collection">
+                    {% for genre in genres %}
+                        <a href="{% url 'library:home' %}?genre_slug={{ genre.slug }}" class="collection-item">
+                            <div class="valign-wrapper" style="display: flex; justify-content: space-between">
+                                <span>{{ genre.genre_rus }}</span>
+                                <span>{{ genre.book_count }}</span>
+                            </div>
+                        </a>
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card z-depth-2">
+    <div class="card-content">
+        <div class="card-title center-align teal-text">
+            {{ title }}:
+        </div>
+        <div class="collection">
+            {% for genre in genres %}
+                <a href="{% url 'library:home' %}?genre_slug={{ genre.slug }}" class="collection-item">{{ genre.genre_rus }}: {{ genre.count }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

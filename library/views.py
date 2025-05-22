@@ -25,6 +25,18 @@ from library.templatetags.library_tags import get_author_name
 
 log = logging.getLogger(__name__)
 
+class GenresView(ListView):
+    model = Genre
+    template_name = 'library/genres.html'
+    context_object_name = 'genres'
+    extra_context = {'title': 'Жанры'}
+
+    def get_queryset(self):
+        return super().get_queryset().annotate(count=Count('books')).filter(count__gt=0).order_by('genre_rus')
+    # paginate_by = 1
+
+
+
 class BookView(DetailView):
     model = Book
     template_name = 'library/book_detail.html'
@@ -124,7 +136,6 @@ class HomeView(ListView):
                 query = SearchQuery(q)
                 books = (Book.objects.prefetch_related('author').annotate(rank=SearchRank(vector, query))
                         .filter(rank__gt=0).order_by('-rank'))
-
                 return list({book.id: book for book in books}.values())
 
         return Book.objects.prefetch_related('author').order_by('-created_at')[:7]
