@@ -1,0 +1,29 @@
+{% extends 'content.html' %}
+{% block content %}
+
+
+            <div class="row valign-wrapper" style="min-height: 80vh;">
+                <div class="col s12 m8 offset-m2 l6 offset-l3">
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="teal-text center-align">Хотите удалить "{{ object }}"?</h5>
+                        </div>
+
+                    </div>
+
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <div class="center-align">
+{#                            <input type="button" value="Отмена" onclick="javascript:history.go(-1);">#}
+                            <a class="btn" href="{{request.META.HTTP_REFERER}}">Отмена</a>
+                            <input class="btn center-align" type="submit" value="Удалить">
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+
+
+{% endblock %}

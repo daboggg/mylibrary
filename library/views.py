@@ -13,7 +13,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView
 from pytils.translit import slugify
 
 from library.book_data_utils import check_book_exists, create_or_get_authors, get_genres, get_annotation, get_sequence, \
@@ -217,3 +217,14 @@ class UploadBook(LoginRequiredMixin, CreateView):
 
         log.info('form is filled')
         return super().form_valid(form)
+
+
+class DeleteBook(LoginRequiredMixin, DeleteView):
+    model = Book
+    success_url = reverse_lazy('library:home')
+
+    def post(self, request, *args, **kwargs):
+        self.get_object().book_file.delete()
+        self.get_object().coverpage.delete()
+        return super().post(request, *args, **kwargs)
+

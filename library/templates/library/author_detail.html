@@ -27,42 +27,49 @@
                                                 </div>
                                                 <div class="col s9">
                                                     <h6>
-                                                        <a class="teal-text" href="{{ book.get_absolute_url }}"><b>{{ book.book_title }}</b></a>
+                                                        <a class="teal-text"
+                                                           href="{{ book.get_absolute_url }}"><b>{{ book.book_title }}</b></a>
                                                     </h6>
                                                     {% if book.sequence.all %}
-                                                                <p>
-                                                                    <i>
-                                                                        <b>серия:</b>
-                                                                        {% for sequence in book.sequence.all %}
-                                                                            {% if forloop.counter > 1 %}
-                                                                                ,&nbsp;
-                                                                            {% endif %}
-                                                                            <a class="teal-text" href="#">
-                                                                            {{ sequence.name }}{% if sequence.number %}:
-                                                                                {{ sequence.number }}{% endif %}
-                                                                            </a>
-                                                                        {% endfor %}
-                                                                    </i>
-                                                                </p>
-                                                            {% endif %}
+                                                        <p>
+                                                            <i>
+                                                                <b>серия:</b>
+                                                                {% for sequence in book.sequence.all %}
+                                                                    {% if forloop.counter > 1 %}
+                                                                        ,&nbsp;
+                                                                    {% endif %}
+                                                                    <a class="teal-text" href="#">
+                                                                        {{ sequence.name }}{% if sequence.number %}:
+                                                                            {{ sequence.number }}{% endif %}
+                                                                    </a>
+                                                                {% endfor %}
+                                                            </i>
+                                                        </p>
+                                                    {% endif %}
                                                     {% if book.tags.all %}
-                                                                <p>
-                                                                    <i>
-                                                                        <b>в книге есть: </b>
-                                                                        {% for tag in book.tags.all %}
-                                                                            {% if forloop.counter > 1 %}
-                                                                                ,&nbsp;
-                                                                            {% endif %}
-                                                                            <a class="teal-text" href="#">{{ tag.name }}</a>
-                                                                        {% endfor %}
-                                                                    </i>
-                                                                </p>
-                                                            {% endif %}
+                                                        <p>
+                                                            <i>
+                                                                <b>в книге есть: </b>
+                                                                {% for tag in book.tags.all %}
+                                                                    {% if forloop.counter > 1 %}
+                                                                        ,&nbsp;
+                                                                    {% endif %}
+                                                                    <a class="teal-text" href="#">{{ tag.name }}</a>
+                                                                {% endfor %}
+                                                            </i>
+                                                        </p>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="col s1">
                                                     {% if user.is_authenticated %}
-                                                        <a class="teal-text" href="{% url 'library:download_book' book.slug %}"><i
-                                                                class="material-icons right">download</i></a>
+                                                        <a class="teal-text"
+                                                           href="{% url 'library:download_book' book.slug %}"><i
+                                                                class="material-icons">download</i></a>
+                                                    {% endif %}
+                                                    {% if user.username == book.owner.username %}
+                                                        <a class="red-text"
+                                                           href="{% url 'library:delete_book' book.pk %}"><i
+                                                                class="material-icons">delete</i></a>
                                                     {% endif %}
                                                 </div>
                                             </div>
