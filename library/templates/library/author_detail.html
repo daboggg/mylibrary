@@ -38,7 +38,7 @@
                                                                     {% if forloop.counter > 1 %}
                                                                         ,&nbsp;
                                                                     {% endif %}
-                                                                    <a class="teal-text" href="#">
+                                                                    <a class="teal-text" href="{% url 'library:home' %}?sequence_lat_name={{ sequence.lat_name }}">
                                                                         {{ sequence.name }}{% if sequence.number %}:
                                                                             {{ sequence.number }}{% endif %}
                                                                     </a>
@@ -54,7 +54,7 @@
                                                                     {% if forloop.counter > 1 %}
                                                                         ,&nbsp;
                                                                     {% endif %}
-                                                                    <a class="teal-text" href="#">{{ tag.name }}</a>
+                                                                    <a class="teal-text" href="{% url 'library:home' %}?tag_name={{ tag.name }}">{{ tag.name }}</a>
                                                                 {% endfor %}
                                                             </i>
                                                         </p>

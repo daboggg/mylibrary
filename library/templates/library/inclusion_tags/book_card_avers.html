@@ -6,7 +6,7 @@
     </div>
     <div class="col">
         {% for author in authors %}
-        <p><a class="teal-text" href="{% url 'library:home' %}?author_slug={{ author.slug }}">{{ author|get_author_name }}</a></p>
+        <p><a class="teal-text" href="{% url 'library:author' author.slug %}">{{ author|get_author_name }}</a></p>
         {% endfor %}
     </div>
 </div>
