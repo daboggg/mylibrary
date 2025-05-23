@@ -1,3 +1,5 @@
+from mimetypes import inited
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -32,6 +34,11 @@ class RegisterUser(SuccessMessageMixin, ErrorMessageMixin, CreateView):
     success_url = reverse_lazy('users:login')
     success_message = "%(username)s - успешная регистрация"
     error_message = "Ошибка!"
+
+    def get_initial(self):
+        initial =  super().get_initial()
+        initial['is_active'] = False
+        return initial
 
 
 class ProfileUser(SuccessMessageMixin, ErrorMessageMixin, LoginRequiredMixin, UpdateView):

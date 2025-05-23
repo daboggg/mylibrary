@@ -26,18 +26,20 @@ class RegisterUserForm(UserCreationForm):
     password1 = forms.CharField(label="Пароль", widget=forms.PasswordInput(attrs={'class': 'teal-text', 'placeholder': 'Пароль'}))
     password2 = forms.CharField(label="Повтор пароля", widget=forms.PasswordInput(attrs={'class': 'teal-text', 'placeholder': 'Повтор пароля'}))
 
+
     class Meta:
         model = get_user_model()
         fields = ['username', 'email',
                   'first_name', 'last_name',
                   'date_birth', 'photo',
-                  'password1', 'password2']
+                  'password1', 'password2', 'is_active']
         widgets = {
             'email': forms.EmailInput(attrs={'class': 'teal-text', 'placeholder': 'E-mail'}),
             'first_name': forms.TextInput(attrs={'class': 'teal-text', 'placeholder': 'Ваше имя'}),
             'last_name': forms.TextInput(attrs={'class': 'teal-text', 'placeholder': 'Ваша фамилия'}),
             'date_birth': forms.TextInput(attrs={'class': 'teal-text datepicker', 'placeholder': 'Дата рождения'}),
             'photo': forms.FileInput(attrs={'class': 'teal-text', 'placeholder': 'Фото', 'name': 'photo'}),
+            'is_active': forms.HiddenInput,
         }
         labels = {
             'email': 'E-mail',
@@ -45,6 +47,7 @@ class RegisterUserForm(UserCreationForm):
             'last_name': 'Фамилия',
             'date_birth': 'Дата рождения',
             'photo': 'Фотография',
+            'is_active': ''
         }
 
     def clean_email(self):
