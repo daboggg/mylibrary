@@ -34,6 +34,7 @@
 
 <ul id="dropdown1" class="dropdown-content">
     <li><a href="{% url 'users:profile' %}">Профиль</a></li>
+    <li><a href="{% url 'library:my_books' %}">Мои книги</a></li>
     <li class="divider"></li>
     {% if user.is_superuser %}
         <li><a href="{% url "admin:index" %}">Админ панель</a></li>
@@ -46,6 +47,7 @@
 
 <ul id="dropdown2" class="dropdown-content">
     <li><a href="{% url 'users:profile' %}">Профиль</a></li>
+    <li><a href="{% url 'library:my_books' %}">Мои книги</a></li>
     <li class="divider"></li>
     {% if user.is_superuser %}
         <li><a href="{% url "admin:index" %}">Админ панель</a></li>

@@ -10,7 +10,7 @@ from django.core.files.base import ContentFile
 from django.db import transaction, IntegrityError
 from django.db.models import Count, Q, F
 from django.http import FileResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, DeleteView
@@ -224,7 +224,21 @@ class DeleteBook(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('library:home')
 
     def post(self, request, *args, **kwargs):
-        self.get_object().book_file.delete()
-        self.get_object().coverpage.delete()
-        return super().post(request, *args, **kwargs)
+
+        if self.get_object().owner == self.request.user:
+
+            self.get_object().book_file.delete()
+            self.get_object().coverpage.delete()
+            return super().post(request, *args, **kwargs)
+        else:
+            return redirect('library:home')
+
+class MyBooksView(LoginRequiredMixin, ListView):
+    model = Book
+    template_name = 'library/my-books.html'
+    context_object_name = 'books'
+    paginate_by = 2
+
+    def get_queryset(self):
+        return super().get_queryset().filter(owner=self.request.user)
 
