@@ -4,6 +4,7 @@ from uuid import uuid4
 
 import xmltodict
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
@@ -216,6 +217,7 @@ class UploadBook(LoginRequiredMixin, CreateView):
             return super().form_invalid(form)
 
         log.info('form is filled')
+        messages.add_message(self.request, messages.INFO, 'Книга добавлена в библиотеку')
         return super().form_valid(form)
 
 
@@ -229,6 +231,7 @@ class DeleteBook(LoginRequiredMixin, DeleteView):
 
             self.get_object().book_file.delete()
             self.get_object().coverpage.delete()
+            messages.add_message(self.request, messages.INFO, 'Книга удалена')
             return super().post(request, *args, **kwargs)
         else:
             return redirect('library:home')

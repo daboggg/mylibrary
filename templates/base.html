@@ -92,6 +92,15 @@
     {% endif %}
 </ul>
 
+{% if messages %}
+    {% for message in messages %}
+        <script>M.toast({
+            {#html: '<span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>'#}
+            html: '<span>{{ message }}</span>',
+            classes: 'teal'
+        });</script>
+    {% endfor %}
+{% endif %}
 
 {% block main %}
 
