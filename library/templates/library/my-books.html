@@ -11,7 +11,7 @@
             <ul class="collection with-header">
                 <li class="collection-header">
                     <h4 class="center-align ">Мои книги:</h4>
-                    <h6 class="center-align ">Всего книг: {{ books|length }}</h6>
+                    <h6 class="center-align ">Всего книг: {{ paginator.count }}</h6>
                     <div class="center-align mt-3">{% pagination %}</div>
                 </li>
                 {% for book in books %}
