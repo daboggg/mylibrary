@@ -13,7 +13,7 @@ def save_genres(apps, schema_editor):
 
 def add_user1(apps, schema_editor):
     model = apps.get_model('users', 'User')
-    model.objects.create(username='admin', is_superuser=True, email='daboggg@ya.ru', password=make_password('As144911.'))
+    model.objects.create(username='admin', is_superuser=True, is_staff=True, email='daboggg@ya.ru', password=make_password('As144911.'))
 
 class Migration(migrations.Migration):
 
