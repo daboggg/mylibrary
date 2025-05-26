@@ -6,7 +6,6 @@
 {% endblock %}
 
 {% block sidebar %}
-    {# поиск#}
     <div class="card z-depth-2">
         <div class="pxy-1 teal-text">
             <form method="get" class="row">
@@ -19,7 +18,7 @@
 
     <div class="card z-depth-2">
         <div class="pxy-1 teal-text">
-            <h5>Наиболее популярные авторы:</h5>
+            <h5>Авторы:</h5>
             <div class="collection">
                 {% get_authors 'most_popular' as most_popular_authors %}
                 {% for author in most_popular_authors %}

@@ -40,14 +40,14 @@ def url_replace(request, field, value):
 @register.simple_tag
 def get_genres(arg=None):
     if arg == 'most_popular':
-        return Genre.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')[:5]
+        return Genre.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')[:7]
     else:
         return Genre.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')
 
 @register.simple_tag
 def get_authors(arg=None):
     if arg == 'most_popular':
-        return Author.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')[:5]
+        return Author.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')[:7]
     else:
         return Author.objects.filter(books__isnull=False).annotate(book_count=Count('books')).order_by('-book_count')
 

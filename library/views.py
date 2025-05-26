@@ -73,7 +73,7 @@ class AuthorsView(ListView):
     template_name = 'library/authors.html'
     context_object_name = 'authors'
     extra_context = {'title': 'Авторы'}
-    paginate_by = 1
+    paginate_by = 7
 
     def get_queryset(self):
         if letter := self.request.GET.get('letter'):
@@ -93,7 +93,7 @@ class HomeView(ListView):
     model = Book
     template_name = 'library/home.html'
     context_object_name = 'books'
-    paginate_by = 1
+    paginate_by = 7
 
     def get_context_data(self, *args, **kwargs):
         context =  super().get_context_data(*args, **kwargs)

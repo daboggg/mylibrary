@@ -5,16 +5,6 @@
 {% block title %}{{ title|capfirst }}{% endblock %}
 
 {% block sidebar %}
-    {#    <div class="card z-depth-2">#}
-    {#        <div class="pxy-1 teal-text">#}
-    {#            <form method="get" class="row">#}
-    {#                <div class=" col s12">#}
-    {#                    <input placeholder="Поиск" name="q" id="search" type="text">#}
-    {#                </div>#}
-    {#            </form>#}
-    {#        </div>#}
-    {#    </div>#}
-
     <div class="card z-depth-2">
         <div class="pxy-1 teal-text">
             <h6>
@@ -23,7 +13,7 @@
             </h6>
             {% get_genres 'most_popular' as genres %}
             {% if genres %}
-                <h5>Наиболее популярные жанры:</h5>
+                <h5>Жанры:</h5>
                 <div class="collection">
                     {% for genre in genres %}
                         <a href="{% url 'library:home' %}?genre_slug={{ genre.slug }}" class="collection-item">
@@ -44,7 +34,7 @@
     <div class="card z-depth-2">
     <div class="card-content">
         <div class="card-title center-align teal-text">
-            {{ title }}:
+            Все жанры:
         </div>
         <div class="collection">
             {% for genre in genres %}

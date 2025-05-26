@@ -23,7 +23,7 @@
             </h6>
             {% get_genres 'most_popular' as genres %}
             {% if genres %}
-                <h5>Наиболее популярные жанры:</h5>
+                <h5>Жанры:</h5>
                 <div class="collection">
                     {% for genre in genres %}
                         <a href="{% url 'library:home' %}?genre_slug={{ genre.slug }}" class="collection-item">
@@ -33,6 +33,9 @@
                             </div>
                         </a>
                     {% endfor %}
+                    <a href="{% url 'library:genres' %}" class="collection-item">
+                        Показать все
+                    </a>
 
                 </div>
             {% endif %}
