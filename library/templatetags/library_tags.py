@@ -2,6 +2,7 @@ from django import template
 from django.db.models.aggregates import Count
 
 from library.models import Genre, Book, Author
+from users.models import User
 
 register = template.Library()
 
@@ -71,4 +72,9 @@ def get_author_name(author: Author):
 @register.simple_tag
 def get_alphabet_for_search_author():
     return "АБВГДЕЁЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ"
+
+@register.simple_tag
+def is_read(book: Book, user: User):
+
+    return user.id in book.ids.values_list('user_id', flat=True)
 

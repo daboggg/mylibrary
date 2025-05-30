@@ -19,6 +19,7 @@
                                 <div class="collapsible-body">
                                     <div class="collection">
                                         {% for book in books %}
+                                            {% is_read book user as is_read %}
                                             <div class="row">
                                                 <div class="col s2">
                                                     <a href="{{ book.get_absolute_url }}">
@@ -38,7 +39,8 @@
                                                                     {% if forloop.counter > 1 %}
                                                                         ,&nbsp;
                                                                     {% endif %}
-                                                                    <a class="teal-text" href="{% url 'library:home' %}?sequence_lat_name={{ sequence.lat_name }}">
+                                                                    <a class="teal-text"
+                                                                       href="{% url 'library:home' %}?sequence_lat_name={{ sequence.lat_name }}">
                                                                         {{ sequence.name }}{% if sequence.number %}:
                                                                             {{ sequence.number }}{% endif %}
                                                                     </a>
@@ -54,7 +56,8 @@
                                                                     {% if forloop.counter > 1 %}
                                                                         ,&nbsp;
                                                                     {% endif %}
-                                                                    <a class="teal-text" href="{% url 'library:home' %}?tag_name={{ tag.name }}">{{ tag.name }}</a>
+                                                                    <a class="teal-text"
+                                                                       href="{% url 'library:home' %}?tag_name={{ tag.name }}">{{ tag.name }}</a>
                                                                 {% endfor %}
                                                             </i>
                                                         </p>
@@ -70,6 +73,17 @@
                                                         <a class="red-text"
                                                            href="{% url 'library:delete_book' book.pk %}"><i
                                                                 class="material-icons">delete</i></a>
+                                                    {% endif %}
+                                                    {% if user.is_authenticated %}
+                                                        <a class="teal-text"
+                                                           href="{% url 'library:change_read_status' book.pk %}"><i
+                                                                class="material-icons">
+                                                            {% if is_read %}
+                                                                check_box
+                                                            {% else %}
+                                                                check_box_outline_blank
+                                                            {% endif %}
+                                                        </i></a>
                                                     {% endif %}
                                                 </div>
                                             </div>

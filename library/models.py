@@ -7,6 +7,11 @@ from taggit.managers import TaggableManager
 from library.model_utils import unique_slugify
 
 
+class IdReadBook(models.Model):
+    book = models.ForeignKey('Book', on_delete=models.CASCADE, related_name='ids')
+    user_id = models.PositiveIntegerField(default=0)
+
+
 class Book(models.Model):
     owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name='books')
     genres = models.ManyToManyField('Genre', blank=True, related_name='books')

@@ -5,6 +5,7 @@ from library import views
 app_name = 'library'
 
 urlpatterns = [
+    path('change-read-status/<int:book_pk>/', views.change_read_status, name='change_read_status'),
     path('upload-book/', views.UploadBook.as_view(), name='upload_book'),
     path('download-book/<slug:book_slug>/', views.DownloadBook.as_view(), name='download_book'),
     path('authors/', views.AuthorsView.as_view(), name='authors'),

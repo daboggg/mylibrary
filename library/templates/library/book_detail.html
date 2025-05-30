@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+    {% is_read book user as is_read %}
     <div class="card horizontal row valign-wrapper teal-text z-depth-2 mx-1">
         <div class="col s4 l3 card-image">
             <img class="materialboxed" src="{{ book.coverpage.url }}">
@@ -24,6 +25,17 @@
                         <a class="red-text"
                            href="{% url 'library:delete_book' book.pk %}"><i
                                 class="material-icons right">delete</i></a>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <a class="teal-text" href="{% url 'library:change_read_status' book.pk %}"><i
+                                class="material-icons right">
+                            {% if is_read %}
+                                check_box
+                            {% else %}
+                                check_box_outline_blank
+                            {% endif %}
+                        </i></a>
                     {% endif %}
                 </h4>
 

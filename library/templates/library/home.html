@@ -47,6 +47,7 @@
     <h5 class="center-align teal-text">{{ content_name|capfirst }}: {{ paginator.count }} кн.</h5>
     <div class="center-align mt-3">{% pagination %}</div>
     {% for book in books %}
+        {% is_read book user as is_read %}
         <div class="card horizontal row valign-wrapper teal-text z-depth-2">
             <div class="col s4 l3 card-image waves-effect waves-block waves-light">
                 <a href="{{ book.get_absolute_url }}">
@@ -57,9 +58,9 @@
                 <span class="card-title">
                     <a class="teal-text" href="{{ book.get_absolute_url }}">{{ book.book_title }}</a>
 
-                
-                
-                
+
+
+
                     {% if user.is_authenticated %}
                         <a class="teal-text" href="{% url 'library:download_book' book.slug %}"><i
                                 class="material-icons right">download</i></a>
@@ -67,6 +68,17 @@
                     {% if user.username == book.owner.username %}
                         <a class="red-text" href="{% url 'library:delete_book' book.pk %}"><i
                                 class="material-icons right">delete</i></a>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <a class="teal-text" href="{% url 'library:change_read_status' book.pk %}"><i
+                                class="material-icons right">
+                            {% if is_read %}
+                                check_box
+                            {% else %}
+                                check_box_outline_blank
+                            {% endif %}
+                        </i></a>
                     {% endif %}
                 
                 

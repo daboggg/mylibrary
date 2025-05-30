@@ -20,11 +20,22 @@ from pytils.translit import slugify
 from library.book_data_utils import check_book_exists, create_or_get_authors, get_genres, get_annotation, get_sequence, \
     get_keywords, get_binary_img, create_and_get_img
 from library.forms import BookUploadForm
-from library.models import Book, Genre, Author, Sequence
+from library.models import Book, Genre, Author, Sequence, IdReadBook
 from library.parserFB2 import get_soup_from_fb2
 from library.templatetags.library_tags import get_author_name
 
 log = logging.getLogger(__name__)
+
+
+def change_read_status(request, book_pk):
+    book = get_object_or_404(Book, pk=book_pk)
+    try:
+        irb = IdReadBook.objects.get(book=book, user_id=request.user.pk)
+        irb.delete()
+    except IdReadBook.DoesNotExist:
+        IdReadBook.objects.create(book=book, user_id=request.user.pk)
+    return redirect(request.META.get('HTTP_REFERER'))
+
 
 class GenresView(ListView):
     model = Genre
@@ -93,7 +104,7 @@ class HomeView(ListView):
     model = Book
     template_name = 'library/home.html'
     context_object_name = 'books'
-    paginate_by = 7
+    paginate_by = 1
 
     def get_context_data(self, *args, **kwargs):
         context =  super().get_context_data(*args, **kwargs)
